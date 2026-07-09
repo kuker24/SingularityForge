@@ -50,6 +50,23 @@ bash installer/verify.sh
 
 Output:
 ```txt
+SingularityForge installer
+Repo: /home/fahmi/Downloads/LAB GITHUB/LAB SKILL/SingalarityForge
+Target: /home/fahmi/.claude
+Claude Code: found (2.1.205 (Claude Code))
+Backup: /home/fahmi/.claude.singularityforge.backup.20260709-214857
+Install complete.
+Next steps:
+1. Verify the installation by running: bash installer/verify.sh
+```
+
+Followed by verify command:
+```bash
+bash installer/verify.sh
+```
+
+Output:
+```txt
 ok: /home/fahmi/.claude/CLAUDE.md
 ok: /home/fahmi/.claude/SingularityForge.md
 ok: /home/fahmi/.claude/settings.json
@@ -66,7 +83,7 @@ ok: /home/fahmi/.claude/hooks/pre-dangerous-command.ps1
 ok: /home/fahmi/.claude/hooks/post-edit-skill-verify.ps1
 ok: /home/fahmi/.claude/hooks/stop-verify-before-done.ps1
 ok: /home/fahmi/.claude/profiles/minimal.md
-warning: claude command not found
+ok: claude command found
 SingularityForge verification passed.
 ```
 
