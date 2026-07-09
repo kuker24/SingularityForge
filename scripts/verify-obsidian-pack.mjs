@@ -25,7 +25,7 @@ check(fs.existsSync(skill), 'obsidian-sync skill exists');
 if (fs.existsSync(skill)) {
   const text = fs.readFileSync(skill, 'utf8').toLowerCase();
   for (const phrase of ['search before read','read only relevant','concise session logs','do not store secrets','adr','handoff']) check(text.includes(phrase), `obsidian-sync contains "${phrase}"`);
-  check(text.startsWith('---\n'), 'obsidian-sync frontmatter present');
+  check(/^\uFEFF?---\r?\n/.test(text), 'obsidian-sync frontmatter present');
 }
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'sf-obsidian-verify-'));
 try {
