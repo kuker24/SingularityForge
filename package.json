@@ -1,0 +1,29 @@
+{
+  "name": "singularityforge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Global Claude Code runtime distribution with skills, rules, hooks, installers, and evidence discipline.",
+  "scripts": {
+    "typecheck": "node scripts/check-js-syntax.mjs",
+    "test:unit": "node tests/smoke.test.mjs",
+    "test:coverage": "node tests/smoke.test.mjs",
+    "verify:skills": "node scripts/verify-skills.mjs",
+    "audit:skills": "node scripts/audit-skills.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "token:report": "node scripts/token-report.mjs",
+    "mutation": "node -e \"console.log('Manual only: mutation testing is intentionally not auto-run. Configure Stryker before use.')\""
+  },
+  "keywords": [
+    "claude-code",
+    "agent-skills",
+    "ai-coding",
+    "obsidian",
+    "security",
+    "developer-tooling"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}
