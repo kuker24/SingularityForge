@@ -10,15 +10,16 @@ Claude Code Hook Event ──> Core Hook (Bash/PowerShell)
                              │
                              └──> [Hook Adapter Framework]
                                     │
-                                    ├──> noop.sh (Default)
+                                    ├──> registry.json (official adapter metadata)
+                                    ├──> noop.sh (Default OFF)
                                     ├──> logging.sh (OFF)
                                     ├──> audit.sh (OFF)
-                                    └──> external-placeholder.sh (OFF)
+                                    └──> external-placeholder.sh (OFF / placeholder)
 ```
 
 ## Kebijakan Default (Default OFF)
 Sesuai dengan **Security Model SingularityForge**, seluruh adapter hooks memiliki status default **OFF** (`enabled: false`).
-Tidak ada request jaringan otomatis yang dipicu secara default, dan tidak ada credentials/secrets yang disimpan dalam file adapter.
+Tidak ada request jaringan otomatis yang dipicu secara default, dan tidak ada credentials/secrets yang disimpan dalam file adapter. Registry resmi berada di `packages/hooks/adapters/registry.json`; semua adapter resmi harus memiliki `defaultEnabled=false` dan `networkCall=false`.
 
 ## Cara Konfigurasi (settings.json)
 
@@ -43,6 +44,23 @@ Untuk mengonfigurasi adapter, edit berkas settings `~/.claude/settings.json`:
 
 ---
 
+## Validator Konfigurasi
+
+Gunakan command berikut untuk memvalidasi konfigurasi adapter dan registry:
+```bash
+npm run validate:adapters
+```
+
+Validator memeriksa:
+- `hookAdapters.enabled` bertipe boolean dan default repo tetap `false`.
+- `hookAdapters.active` harus array.
+- Nama adapter harus terdaftar di `registry.json`.
+- File adapter Bash harus ada.
+- `logDir` kosong hanya WARN dan memakai fallback aman.
+- Integrasi eksternal tetap default OFF.
+
+---
+
 ## Aturan Keamanan (Security Rules)
 1. **Pencegahan Leak**: Setiap log atau audit data wajib melewati penapisan regex (`sed`) untuk menyamarkan rahasia (kunci token, password, credential command line, token auth).
 2. **Fail-Safe**: Kegagalan pada adapter tidak boleh memblokir jalannya Claude Code utama. Seluruh adapter harus menangani error secara internal dan mengembalikan exit code `0`.
@@ -57,4 +75,4 @@ Berikut adalah contoh log yang dihasilkan oleh logging adapter di `~/.claude/log
 ```
 
 ## Batasan (Known Limitations)
-Pada rilis `v0.5.0` dan `v0.5.1`, Hook Adapter Framework hanya diuji dan diverifikasi secara resmi untuk platform **Linux CachyOS** menggunakan Bash runtime. Dukungan untuk PowerShell di Windows saat ini berstatus **Experimental** (lihat [docs/WINDOWS_HOOK_ADAPTERS.md](WINDOWS_HOOK_ADAPTERS.md)).
+Pada rilis `v0.6.0`, Hook Adapter Framework Bash untuk **Linux/CachyOS** berstatus **Verified** lewat `npm run validate:adapters`, `npm run doctor`, smoke test, dan installer dry-run. Dukungan PowerShell Windows tetap **Experimental** (lihat [docs/WINDOWS_HOOK_ADAPTERS.md](WINDOWS_HOOK_ADAPTERS.md)).

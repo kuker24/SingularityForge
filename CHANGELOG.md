@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 - Linux Runtime Completeness
+
+### Added
+- `packages/hooks/adapters/registry.json` — official adapter registry dengan metadata defaultEnabled, networkCall, bash/ps1 paths.
+- `scripts/validate-adapter-config.mjs` — validator adapter config terhadap registry; exit 1 jika ada adapter tidak dikenal atau missing file.
+- `scripts/doctor.mjs` (rewrite) — doctor penuh: Node.js version, Claude CLI, global memory, source files, skills, bash hooks executable, bash adapters executable, registry, settings defaults.
+- `npm run validate:adapters` script alias.
+- CI `ubuntu-latest` ditambah: token benchmark all profiles, validate:adapters, doctor.
+- `reports/install-verification/linux-runtime-completeness.md` — evidence report lengkap Linux runtime.
+- Smoke test diperluas: registry validation, validate-adapter-config PASS, doctor PASS.
+
 ## 0.5.2 - Native Windows Hardening (Experimental)
 
 ### Added

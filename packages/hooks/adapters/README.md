@@ -1,6 +1,8 @@
 # Hook Adapters Directory
 
-Direktori ini berisi modular adapters untuk integrasi dengan tool eksternal secara terisolasi dan aman.
+Direktori ini berisi modular adapters untuk integrasi hook secara terisolasi dan aman.
+
+`registry.json` adalah daftar resmi adapter bawaan SingularityForge. Semua adapter resmi harus memiliki `defaultEnabled=false` dan `networkCall=false`.
 
 ## Aturan Keamanan & Penggunaan
 1. Semua adapter defaultnya non-aktif (`enabled: false` di `settings.json`).

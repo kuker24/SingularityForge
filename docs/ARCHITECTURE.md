@@ -5,7 +5,7 @@
 SingularityForge memakai arsitektur berlapis:
 
 ```txt
-Global memory -> modular rules -> skill router -> task skills -> hooks -> evidence reports
+Global memory -> modular rules -> skill router -> task skills -> hooks/adapters -> validator/doctor -> evidence reports
 ```
 
 Tujuannya agar Claude Code bekerja dengan konteks kecil, aturan jelas, verifikasi kuat, dan hasil bisa diulang lintas project.
@@ -87,9 +87,27 @@ Lokasi install:
 ~/.claude/hooks/
 ```
 
-Hooks menjadi enforcement layer untuk operasi yang perlu guardrail nyata.
+Hooks menjadi enforcement layer untuk operasi yang perlu guardrail nyata. Hook Adapter Framework berada di bawah `packages/hooks/adapters/` dan divalidasi oleh `registry.json` + `scripts/validate-adapter-config.mjs`.
 
-### 5. Profiles Layer
+### 5. Runtime Validation Layer
+
+Lokasi source:
+
+```txt
+scripts/doctor.mjs
+scripts/validate-adapter-config.mjs
+packages/hooks/adapters/registry.json
+```
+
+Fungsi:
+
+- Memastikan Node.js >=20.
+- Memastikan rules/skills/global memory tersedia.
+- Memastikan Bash hooks dan Bash adapters executable pada Linux.
+- Memastikan adapter resmi terdaftar, default OFF, dan tidak memiliki network call default.
+- Memastikan konfigurasi eksternal tetap default OFF.
+
+### 6. Profiles Layer
 
 Lokasi source:
 
@@ -99,7 +117,7 @@ packages/profiles/
 
 Profile menentukan seberapa banyak konteks dan tool yang boleh aktif.
 
-### 6. Obsidian Layer
+### 7. Obsidian Layer
 
 Lokasi source:
 
@@ -148,6 +166,16 @@ User task
 │   ├── session-log/
 │   └── obsidian-sync/
 ├── hooks/
+│   ├── pre-dangerous-command.sh
+│   ├── post-edit-skill-verify.sh
+│   ├── stop-verify-before-done.sh
+│   └── adapters/
+│       ├── registry.json
+│       ├── noop.sh
+│       ├── logging.sh
+│       ├── audit.sh
+│       ├── external-placeholder.sh
+│       └── run-adapters.sh
 └── profiles/
 ```
 
