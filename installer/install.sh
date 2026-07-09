@@ -77,6 +77,13 @@ run "cp \"$REPO_ROOT/packages/templates/SingularityForge.md\" \"$CLAUDE_DIR/Sing
 # Ensure all scripts/hooks in target folder have execute permissions
 run "chmod +x \"$CLAUDE_DIR\"/hooks/*.sh 2>/dev/null || true"
 
+# Compile and optimize token cache
+if [ "$DRY_RUN" = false ]; then
+  node "$REPO_ROOT/scripts/optimize-token-cache.mjs"
+else
+  echo "[dry-run] node \"$REPO_ROOT/scripts/optimize-token-cache.mjs\""
+fi
+
 say "Install complete."
 say "Next steps:"
 say "1. Verify the installation by running: bash installer/verify.sh"

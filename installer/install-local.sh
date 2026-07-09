@@ -114,6 +114,11 @@ if [ "$DRY_RUN" = false ]; then
       fi
     fi
   done
+  
+  # Run token cache optimizer for workspace local
+  node "$REPO_ROOT/scripts/optimize-token-cache.mjs"
+else
+  echo "[dry-run] node \"$REPO_ROOT/scripts/optimize-token-cache.mjs\""
 fi
 
 echo "Local profile installation complete."

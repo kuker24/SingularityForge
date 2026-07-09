@@ -22,6 +22,7 @@ Filosofi utama:
 3. **Idempotent Lints & Installers**: Installer mendeteksi status Claude Code, membuat backup di `~/.claude.singularityforge.backup.<timestamp>`, memvalidasi source file sebelum menyalin, dan mengonfigurasi permissions secara otomatis.
 4. **AstralForge Import Pipeline**: Scripts import modular `import-astralforge-skills.mjs` untuk mengunduh, mengaudit dari malware/destructive command, dan meletakkan skill baru ke staged review.
 5. **Obsidian Integration**: Template Markdown siap pakai untuk Session Logs, Debug Notes, dan Architecture Decision Records (ADR).
+6. **Token Cache & Memory Optimizer**: Mengompilasi dan memampatkan rules/skills relevan berdasarkan profile aktif (`minimal`/`coding`/`security`/dll.) ke dalam sebuah berkas memori tunggal `CLAUDE.md` teroptimasi secara dinamis guna menjaga budget context token tetap efisien.
 
 ---
 

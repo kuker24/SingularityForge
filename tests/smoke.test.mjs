@@ -14,7 +14,8 @@ const required = [
   'installer/install.sh',
   'installer/install.ps1',
   'installer/install-local.sh',
-  'installer/install-local.ps1'
+  'installer/install-local.ps1',
+  'scripts/optimize-token-cache.mjs'
 ];
 
 const missing = required.filter((file) => !existsSync(path.join(root, file)));

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 - Token Cache / Global Memory Optimizer
+
+### Added
+- Automated token cache compiler and optimizer script (`scripts/optimize-token-cache.mjs`) that minifies, strips comments, and compiles profile-relevant rules and skills into a single `CLAUDE.md`.
+- Fallback resolution paths for workspace-local builds to leverage global or package templates without local file duplication.
+- Lifecycle hooks in Linux installers to trigger cache optimization automatically upon profile configuration changes.
+
 ## 0.2.1 - Workspace-Local Profile Implementation
 
 ### Added
