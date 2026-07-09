@@ -1,0 +1,8 @@
+title = "SingularityForge Gitleaks Config"
+
+[allowlist]
+description = "Allow documentation examples without real secrets"
+paths = [
+  '''docs/.*''',
+  '''packages/skills/.*/SKILL.md'''
+]
