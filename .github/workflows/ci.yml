@@ -53,6 +53,15 @@ jobs:
       - name: Verify Linux installers
         run: npm run verify:installers
 
+      - name: Verify Obsidian Memory Pack
+        run: npm run obsidian:verify
+
+      - name: Obsidian vault setup dry-run
+        run: npm run obsidian:setup -- --dry-run --target /tmp/singularityforge-vault-ci
+
+      - name: Obsidian vault setup path with spaces
+        run: npm run obsidian:setup -- --target "/tmp/singularityforge vault ci"
+
   windows-verify:
     runs-on: windows-latest
     steps:

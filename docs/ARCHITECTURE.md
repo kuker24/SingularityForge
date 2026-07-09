@@ -120,15 +120,25 @@ packages/profiles/
 
 Profile menentukan seberapa banyak konteks dan tool yang boleh aktif.
 
-### 7. Obsidian Layer
+### 7. Obsidian Memory Pack (Optional)
 
 Lokasi source:
 
 ```txt
 packages/obsidian/
+scripts/setup-obsidian-vault.mjs
+scripts/verify-obsidian-pack.mjs
 ```
 
-Obsidian second brain menyimpan context jangka panjang, session logs, architecture notes, dan debug notes.
+Obsidian Memory Pack adalah optional second brain berbasis Markdown. Ia tidak diinstal runtime default dan setup-nya non-destructive.
+
+Data flow:
+
+```txt
+task -> search notes -> read relevant notes -> work -> verify -> write session log/handoff
+```
+
+Pack menyimpan project context jangka panjang, ADR, debug notes, release notes, dan handoff tanpa dump transcript atau secret.
 
 ## Data Flow
 

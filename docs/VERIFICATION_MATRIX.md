@@ -33,7 +33,10 @@ Status vocabulary:
 | Profile-aware budgets | Verified | `node scripts/token-benchmark.mjs --profile all` | all 6 profiles PASS |
 | macOS installer | Supported | `bash installer/install-macos.sh --dry-run` | Script ready, not locally verified on macOS |
 | Windows installer | Experimental | `powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun` | Script ready, not native user-machine verified |
-| Obsidian vault template | Supported | `ls packages/obsidian` | scaffold provided |
+| Obsidian vault template | Verified | `npm run obsidian:verify` | `reports/obsidian/obsidian-memory-pack-verification.md` |
+| Obsidian Memory Pack | Verified | `npm run obsidian:verify` | `reports/obsidian/obsidian-memory-pack-verification.md` |
+| Obsidian vault setup dry-run | Verified | `npm run obsidian:setup -- --dry-run --target /tmp/...` | Obsidian verification report |
+| Obsidian external skills | Supported | manual opt-in | not installed by default |
 | Hooks scaffold | Verified | `find packages/hooks -type f` | repo files |
 | Bash hooks | Verified | `npm run doctor` | executable checks |
 | Bash adapters | Verified | `npm run doctor` | executable checks |

@@ -1,27 +1,23 @@
-# Obsidian Vault Template
+# Obsidian Memory Pack (Optional)
 
-This folder contains the Markdown structure for SingularityForge second brain.
+Obsidian Memory Pack menyediakan second brain berbasis Markdown untuk project memory yang durable, ringkas, dan dapat dipakai tanpa aplikasi Obsidian.
 
-Use it with Obsidian or as a normal Markdown folder.
+## Opt-in dan Aman
 
-## Structure
-
-```txt
-00-Inbox/
-01-Projects/
-02-Architecture/
-03-Standards/
-04-Skills/
-05-Session-Logs/
-06-Debug-Notes/
-07-Release-Notes/
-99-Archive/
-```
+- Tidak diinstal oleh installer runtime Linux default.
+- Tidak memasang aplikasi atau package eksternal.
+- Tidak mengaktifkan MCP, webhook, atau integrasi jaringan.
+- Setup default non-destructive: file yang sudah ada akan di-skip.
 
 ## Setup
 
-Copy the template into your preferred notes location:
-
 ```bash
-cp -R packages/obsidian/SingularityForge-Vault "$HOME/SingularityForge-Vault"
+npm run obsidian:setup -- --dry-run --target ~/SingularityForge-Vault
+npm run obsidian:setup -- --target ~/SingularityForge-Vault
 ```
+
+Gunakan `--force` hanya bila Anda ingin menimpa file template yang sudah ada.
+
+## Prinsip Memory
+
+Search before read, baca notes relevan saja, simpan rangkuman alih-alih log terminal penuh, dan jangan pernah menyimpan secret, token, API key, credential, atau isi `.env`.
