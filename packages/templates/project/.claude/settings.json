@@ -1,0 +1,13 @@
+{
+  "singularityForge": {
+    "profile": "minimal",
+    "mcpDefault": "off",
+    "repomixDefault": "off",
+    "verifyBeforeDone": true,
+    "protectSecrets": true
+  },
+  "notes": [
+    "This is a safe scaffold template. Review Claude Code settings docs before enabling strict hooks.",
+    "Do not store secrets in this file."
+  ]
+}
