@@ -65,6 +65,20 @@ Filosofi utama:
    powershell -ExecutionPolicy Bypass -File installer/uninstall.ps1
    ```
 
+### Proyek Lokal (Workspace-Local Profile)
+
+Untuk mem-bootstrap `.claude/` di root proyek tertentu agar tidak memengaruhi global settings secara destruktif:
+
+1. **Dry Run**:
+   ```bash
+   bash installer/install-local.sh --dry-run /path/to/your/project
+   ```
+2. **Install**:
+   ```bash
+   bash installer/install-local.sh /path/to/your/project
+   ```
+   *Catatan: Jika berkas `.claude/settings.json` atau `CLAUDE.md` sudah ada di dalam proyek target, installer lokal akan secara otomatis membackup berkas tersebut dengan suffix timestamp.*
+
 ---
 
 ## Profil Konteks (Profile Context Budget)

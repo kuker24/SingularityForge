@@ -22,6 +22,7 @@ Status vocabulary:
 | Skill substantive audit | Verified | `npm run audit:skills` | `reports/skill-audit-summary.md` |
 | settings.json configuration | Verified | `test -f packages/settings/settings.json` | repo file & `docs/HOOKS.md` |
 | Linux installer | Verified | `bash installer/install.sh --dry-run` | `reports/install-verification/dry-run.md` |
+| Linux local installer | Verified | `bash installer/install-local.sh --dry-run` | `tests/smoke.test.mjs` |
 | macOS installer | Supported | `bash installer/install-macos.sh --dry-run` | Script ready, not locally verified on macOS |
 | Windows installer | Supported | `powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun` | Script ready, not locally verified on Windows |
 | Obsidian vault template | Supported | `ls packages/obsidian` | scaffold provided |

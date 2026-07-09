@@ -87,5 +87,47 @@ ok: claude command found
 SingularityForge verification passed.
 ```
 
+## 3. Workspace-Local Install Verification
+
+We verified the local installer (`install-local.sh`) behavior on Linux CachyOS.
+
+### Dry-run Local Installation
+```bash
+$ mkdir -p /tmp/sf-local-test
+$ bash installer/install-local.sh --dry-run /tmp/sf-local-test
+Installing SingularityForge local profile to: /tmp/sf-local-test/.claude
+[dry-run] Enabled. No changes will be written.
+[dry-run] created directory '/tmp/sf-local-test/.claude'
+[dry-run] created directory '/tmp/sf-local-test/.claude/hooks'
+[dry-run] copied 'packages/templates/project/CLAUDE.md' to '/tmp/sf-local-test/.claude/CLAUDE.md'
+[dry-run] copied 'packages/templates/project/.claude/settings.json' to '/tmp/sf-local-test/.claude/settings.json'
+[dry-run] copied 'packages/templates/project/.claude/hooks/pre-dangerous-command.sh' to '/tmp/sf-local-test/.claude/hooks/pre-dangerous-command.sh'
+...
+[dry-run] chmod ok: executable permissions for hook wrappers
+Local profile installation complete.
+```
+
+### Real Local Installation & Overwrite Backup Check
+Command:
+```bash
+$ bash installer/install-local.sh /tmp/sf-local-test
+$ bash installer/install-local.sh /tmp/sf-local-test
+```
+
+Output:
+```txt
+Installing SingularityForge local profile to: /tmp/sf-local-test/.claude
+created: directory '/tmp/sf-local-test/.claude'
+created: directory '/tmp/sf-local-test/.claude/hooks'
+backed up: '/tmp/sf-local-test/.claude/CLAUDE.md' to '/tmp/sf-local-test/.claude/CLAUDE.md.backup.20260709-215834'
+copied: 'packages/templates/project/CLAUDE.md' to '/tmp/sf-local-test/.claude/CLAUDE.md'
+backed up: '/tmp/sf-local-test/.claude/settings.json' to '/tmp/sf-local-test/.claude/settings.json.backup.20260709-215834'
+copied: 'packages/templates/project/.claude/settings.json' to '/tmp/sf-local-test/.claude/settings.json'
+chmod ok: executable permissions for hook wrappers
+verified: executable '/tmp/sf-local-test/.claude/hooks/pre-dangerous-command.sh'
+Local profile installation complete.
+```
+
 Risiko tersisa:
 - Pemasangan dan verifikasi live hooks pada Windows PowerShell hanya diuji secara statis (Supported, not locally verified on Windows OS).
+

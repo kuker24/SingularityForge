@@ -1,33 +1,120 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # SingularityForge project-local installer
-# Usage: bash installer/install-local.sh [target_directory]
+# Usage: bash installer/install-local.sh [--dry-run] [target_directory]
 
-TARGET_DIR="${1:-.}"
+DRY_RUN=false
+TARGET_DIR=""
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    -*)
+      echo "Error: Unknown option $1" >&2
+      exit 1
+      ;;
+    *)
+      if [[ -z "$TARGET_DIR" ]]; then
+        TARGET_DIR="$1"
+      else
+        echo "Error: Multiple target directories specified" >&2
+        exit 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+TARGET_DIR="${TARGET_DIR:-.}"
 
 if [ ! -d "$TARGET_DIR" ]; then
-  echo "Error: Target directory '$TARGET_DIR' does not exist."
+  echo "Error: Target directory '$TARGET_DIR' does not exist." >&2
   exit 1
 fi
 
 CLAUDE_DIR="$TARGET_DIR/.claude"
 echo "Installing SingularityForge local profile to: $CLAUDE_DIR"
+if [ "$DRY_RUN" = true ]; then
+  echo "[dry-run] Enabled. No changes will be written."
+fi
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Create directories
-mkdir -p "$CLAUDE_DIR"
-mkdir -p "$CLAUDE_DIR/hooks"
+if [ "$DRY_RUN" = true ]; then
+  echo "[dry-run] created directory '$CLAUDE_DIR'"
+  echo "[dry-run] created directory '$CLAUDE_DIR/hooks'"
+else
+  mkdir -p "$CLAUDE_DIR"
+  mkdir -p "$CLAUDE_DIR/hooks"
+  echo "created: directory '$CLAUDE_DIR'"
+  echo "created: directory '$CLAUDE_DIR/hooks'"
+fi
 
-# Copy template files
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cp "$REPO_ROOT/packages/templates/project/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
-cp "$REPO_ROOT/packages/templates/project/.claude/settings.json" "$CLAUDE_DIR/settings.json"
+safe_copy() {
+  local src="$1"
+  local dest="$2"
+  
+  if [ -f "$dest" ]; then
+    # File exists, back it up
+    local timestamp
+    timestamp=$(date +%Y%m%d-%H%M%S)
+    local backup_file="${dest}.backup.${timestamp}"
+    
+    if [ "$DRY_RUN" = true ]; then
+      echo "[dry-run] backed up '$dest' to '$backup_file'"
+      echo "[dry-run] copied '$src' to '$dest'"
+    else
+      cp "$dest" "$backup_file"
+      cp "$src" "$dest"
+      echo "backed up: '$dest' to '$backup_file'"
+      echo "copied: '$src' to '$dest'"
+    fi
+  else
+    # File does not exist, copy directly
+    if [ "$DRY_RUN" = true ]; then
+      echo "[dry-run] copied '$src' to '$dest'"
+    else
+      cp "$src" "$dest"
+      echo "copied: '$src' to '$dest'"
+    fi
+  fi
+}
 
-# Copy hook wrappers
-cp "$REPO_ROOT/packages/templates/project/.claude/hooks/"* "$CLAUDE_DIR/hooks/"
+safe_copy "$REPO_ROOT/packages/templates/project/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
+safe_copy "$REPO_ROOT/packages/templates/project/.claude/settings.json" "$CLAUDE_DIR/settings.json"
 
-# Make hook wrappers executable
-chmod +x "$CLAUDE_DIR/hooks/"*.sh 2>/dev/null || true
+for src_hook in "$REPO_ROOT/packages/templates/project/.claude/hooks/"*; do
+  if [ -f "$src_hook" ]; then
+    hook_name=$(basename "$src_hook")
+    safe_copy "$src_hook" "$CLAUDE_DIR/hooks/$hook_name"
+  fi
+done
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[dry-run] chmod ok: executable permissions for hook wrappers"
+else
+  chmod +x "$CLAUDE_DIR/hooks/"*.sh 2>/dev/null || true
+  echo "chmod ok: executable permissions for hook wrappers"
+fi
+
+# Verification of hooks locally
+if [ "$DRY_RUN" = false ]; then
+  for sh_hook in "$CLAUDE_DIR/hooks/"*.sh; do
+    if [ -f "$sh_hook" ]; then
+      if [ -x "$sh_hook" ]; then
+        echo "verified: executable '$sh_hook'"
+      else
+        echo "warning: not executable '$sh_hook'" >&2
+      fi
+    fi
+  done
+fi
 
 echo "Local profile installation complete."
 echo "You can now customize $CLAUDE_DIR/settings.json without affecting global configuration."
