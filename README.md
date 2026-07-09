@@ -23,6 +23,7 @@ Filosofi utama:
 4. **AstralForge Import Pipeline**: Scripts import modular `import-astralforge-skills.mjs` untuk mengunduh, mengaudit dari malware/destructive command, dan meletakkan skill baru ke staged review.
 5. **Obsidian Integration**: Template Markdown siap pakai untuk Session Logs, Debug Notes, dan Architecture Decision Records (ADR).
 6. **Token Cache & Memory Optimizer**: Mengompilasi dan memampatkan rules/skills relevan berdasarkan profile aktif (`minimal`/`coding`/`security`/dll.) ke dalam sebuah berkas memori tunggal `CLAUDE.md` teroptimasi secara dinamis guna menjaga budget context token tetap efisien.
+7. **Linux Runtime Doctor & Adapter Validator**: `npm run doctor` memeriksa kesiapan runtime Linux/CachyOS, sedangkan `npm run validate:adapters` memvalidasi registry adapter, default OFF, dan tidak ada network call default.
 
 ---
 
@@ -79,6 +80,15 @@ Untuk mem-bootstrap `.claude/` di root proyek tertentu agar tidak memengaruhi gl
    bash installer/install-local.sh /path/to/your/project
    ```
    *Catatan: Jika berkas `.claude/settings.json` atau `CLAUDE.md` sudah ada di dalam proyek target, installer lokal akan secara otomatis membackup berkas tersebut dengan suffix timestamp.*
+
+### Runtime Doctor & Adapter Validator
+
+```bash
+npm run doctor
+npm run validate:adapters
+```
+
+Keduanya harus PASS pada baseline Linux/CachyOS. Doctor mengecek Node.js >=20, global memory, rules, skills, hook executable, adapter executable, registry, dan konfigurasi default OFF.
 
 ### Token Cache & Benchmark
 

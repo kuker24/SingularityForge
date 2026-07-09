@@ -1,6 +1,6 @@
 {
   "name": "singularityforge",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "description": "Global Claude Code runtime distribution with skills, rules, hooks, installers, and evidence discipline.",
@@ -11,6 +11,7 @@
     "verify:skills": "node scripts/verify-skills.mjs",
     "audit:skills": "node scripts/audit-skills.mjs",
     "doctor": "node scripts/doctor.mjs",
+    "validate:adapters": "node scripts/validate-adapter-config.mjs",
     "token:optimize": "node scripts/optimize-token-cache.mjs",
     "token:benchmark": "node scripts/token-benchmark.mjs",
     "token:report": "node scripts/token-report.mjs",

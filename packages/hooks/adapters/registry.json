@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "description": "SingularityForge official hook adapter registry",
+  "adapters": [
+    {
+      "name": "noop",
+      "description": "No-operation adapter. Safe bypass, always exits 0.",
+      "bash": "noop.sh",
+      "powershell": "noop.ps1",
+      "defaultEnabled": false,
+      "networkCall": false,
+      "placeholder": false
+    },
+    {
+      "name": "logging",
+      "description": "Writes minimal hook event log to logDir. No network call.",
+      "bash": "logging.sh",
+      "powershell": "logging.ps1",
+      "defaultEnabled": false,
+      "networkCall": false,
+      "placeholder": false
+    },
+    {
+      "name": "audit",
+      "description": "Writes redacted audit log to logDir. Secrets patterns are stripped before write.",
+      "bash": "audit.sh",
+      "powershell": "audit.ps1",
+      "defaultEnabled": false,
+      "networkCall": false,
+      "placeholder": false
+    },
+    {
+      "name": "external-placeholder",
+      "description": "Placeholder for future third-party integrations. Default OFF. No network call is made.",
+      "bash": "external-placeholder.sh",
+      "powershell": "external-placeholder.ps1",
+      "defaultEnabled": false,
+      "networkCall": false,
+      "placeholder": true
+    }
+  ]
+}

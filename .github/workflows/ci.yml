@@ -32,6 +32,18 @@ jobs:
       - name: Token report
         run: npm run token:report
 
+      - name: Token benchmark default profile
+        run: npm run token:benchmark
+
+      - name: Token benchmark all profiles
+        run: node scripts/token-benchmark.mjs --profile all
+
+      - name: Validate adapter config
+        run: npm run validate:adapters
+
+      - name: Doctor check
+        run: npm run doctor
+
   windows-verify:
     runs-on: windows-latest
     steps:

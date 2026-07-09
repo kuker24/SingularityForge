@@ -167,6 +167,128 @@ if (!masterSettings.singularityForge.hookAdapters || masterSettings.singularityF
   process.exit(1);
 }
 
+// 8. Adapter registry validation
+const registryPath = path.join(root, 'packages/hooks/adapters/registry.json');
+if (!existsSync(registryPath)) {
+  console.error('Adapter registry.json missing!');
+  process.exit(1);
+}
+const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+if (!Array.isArray(registry.adapters) || registry.adapters.length === 0) {
+  console.error('registry.json adapters must be a non-empty array!');
+  process.exit(1);
+}
+for (const adapter of registry.adapters) {
+  if (adapter.defaultEnabled !== false) {
+    console.error(`Registry adapter '${adapter.name}' must have defaultEnabled=false`);
+    process.exit(1);
+  }
+  if (adapter.networkCall !== false) {
+    console.error(`Registry adapter '${adapter.name}' must have networkCall=false`);
+    process.exit(1);
+  }
+  // Bash file must exist
+  if (!existsSync(path.join(adaptersPath, adapter.bash))) {
+    console.error(`Registry adapter '${adapter.name}' bash file missing: ${adapter.bash}`);
+    process.exit(1);
+  }
+}
+
+// 9. validate-adapter-config.mjs test cases
+const validatorScript = path.join(root, 'scripts/validate-adapter-config.mjs');
+const validateResult = spawnSync('node', [validatorScript], { encoding: 'utf8' });
+if (validateResult.status !== 0) {
+  console.error('validate-adapter-config.mjs FAIL on default settings:', validateResult.stderr || validateResult.stdout);
+  process.exit(1);
+}
+if (!validateResult.stdout.includes('PASS')) {
+  console.error('validate-adapter-config.mjs did not output PASS:', validateResult.stdout);
+  process.exit(1);
+}
+
+const validatorTmp = path.join(root, 'tests/tmp-validator-test');
+if (existsSync(validatorTmp)) rmSync(validatorTmp, { recursive: true, force: true });
+mkdirSync(validatorTmp, { recursive: true });
+const tmpSettingsPath = path.join(validatorTmp, 'settings.json');
+const tmpRegistryPath = path.join(validatorTmp, 'registry.json');
+const baseSettings = JSON.parse(fs.readFileSync(path.join(root, 'packages/settings/settings.json'), 'utf8'));
+const baseRegistry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+fs.writeFileSync(tmpRegistryPath, JSON.stringify(baseRegistry, null, 2), 'utf8');
+function runValidator(settings, extraEnv = {}) {
+  fs.writeFileSync(tmpSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
+  return spawnSync('node', [validatorScript], {
+    encoding: 'utf8',
+    env: { ...process.env, SF_ADAPTER_SETTINGS: tmpSettingsPath, SF_ADAPTER_REGISTRY: tmpRegistryPath, ...extraEnv }
+  });
+}
+
+// enabled=false valid
+let settingsCase = structuredClone(baseSettings);
+settingsCase.singularityForge.hookAdapters.enabled = false;
+if (runValidator(settingsCase).status !== 0) {
+  console.error('Validator failed enabled=false valid case');
+  process.exit(1);
+}
+
+// enabled=true active=[noop] valid for non-default custom settings
+settingsCase = structuredClone(baseSettings);
+settingsCase.singularityForge.hookAdapters.enabled = true;
+settingsCase.singularityForge.hookAdapters.active = ['noop'];
+if (runValidator(settingsCase).status !== 0) {
+  console.error('Validator failed enabled=true active=[noop] valid case');
+  process.exit(1);
+}
+
+// unknown adapter must FAIL
+settingsCase = structuredClone(baseSettings);
+settingsCase.singularityForge.hookAdapters.active = ['not-a-real-adapter'];
+if (runValidator(settingsCase).status === 0) {
+  console.error('Validator should fail unknown adapter case');
+  process.exit(1);
+}
+
+// missing adapter file must FAIL
+const missingAdapterDir = path.join(validatorTmp, 'missing-adapters');
+mkdirSync(missingAdapterDir, { recursive: true });
+settingsCase = structuredClone(baseSettings);
+settingsCase.singularityForge.hookAdapters.active = ['noop'];
+if (runValidator(settingsCase, { SF_ADAPTERS_DIR: missingAdapterDir }).status === 0) {
+  console.error('Validator should fail missing adapter file case');
+  process.exit(1);
+}
+
+// active not array must FAIL
+settingsCase = structuredClone(baseSettings);
+settingsCase.singularityForge.hookAdapters.active = 'noop';
+if (runValidator(settingsCase).status === 0) {
+  console.error('Validator should fail non-array active case');
+  process.exit(1);
+}
+
+// empty logDir fallback is WARN but valid
+settingsCase = structuredClone(baseSettings);
+delete settingsCase.singularityForge.hookAdapters.logDir;
+if (runValidator(settingsCase).status !== 0) {
+  console.error('Validator failed empty logDir fallback case');
+  process.exit(1);
+}
+
+// external-placeholder remains default OFF and no network call
+const externalPlaceholder = baseRegistry.adapters.find((a) => a.name === 'external-placeholder');
+if (!externalPlaceholder || externalPlaceholder.defaultEnabled !== false || externalPlaceholder.networkCall !== false || externalPlaceholder.placeholder !== true) {
+  console.error('external-placeholder registry metadata must be placeholder=true, defaultEnabled=false, networkCall=false');
+  process.exit(1);
+}
+
+rmSync(validatorTmp, { recursive: true, force: true });
+
+// 10. doctor.mjs exits 0 (PASS or WARN)
+const doctorResult = spawnSync('node', [path.join(root, 'scripts/doctor.mjs')], { encoding: 'utf8' });
+if (doctorResult.status !== 0) {
+  console.error('doctor.mjs exited with FAIL:', doctorResult.stderr || doctorResult.stdout);
+  process.exit(1);
+}
+
 // Clean up
 rmSync(tempProfileDir, { recursive: true, force: true });
 

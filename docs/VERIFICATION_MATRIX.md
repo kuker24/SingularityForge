@@ -30,6 +30,10 @@ Status vocabulary:
 | Obsidian vault template | Supported | `ls packages/obsidian` | scaffold provided |
 | Hooks scaffold | Verified | `find packages/hooks -type f` | repo files |
 | Hook Adapter Framework | Verified | `npm run test:unit` | `reports/hooks/hook-adapter-verification.md` |
+| Adapter Config Validator | Verified | `npm run validate:adapters` | `scripts/validate-adapter-config.mjs` |
+| Adapter Registry | Verified | `npm run validate:adapters` | `packages/hooks/adapters/registry.json` |
+| Doctor Command | Verified | `npm run doctor` | `scripts/doctor.mjs` |
+| Linux/CachyOS Runtime | Verified | `npm run doctor` + installer dry-run | `reports/install-verification/linux-runtime-completeness.md` |
 | Windows Hook Adapters | Experimental | `pwsh -File installer/install-local.ps1 -DryRun` | `reports/hooks/windows-hook-adapter-verification.md` |
 | Windows Native Hardening | Experimental | CI `windows-latest` edge-case + write-to-disk tests | `reports/hooks/windows-native-hardening-verification.md` |
 | PowerShell Hook Support | Experimental | `find packages/hooks -name "*.ps1"` | PowerShell hook files, not locally verified on Windows |
