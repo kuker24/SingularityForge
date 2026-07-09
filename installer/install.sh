@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DRY_RUN=0
+DRY_RUN=false
 for arg in "$@"; do
   case "$arg" in
-    --dry-run) DRY_RUN=1 ;;
+    --dry-run) DRY_RUN=true ;;
     *) echo "Unknown argument: $arg" >&2; exit 1 ;;
   esac
 done
@@ -16,8 +16,18 @@ STAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_DIR="$HOME/.claude.singularityforge.backup.$STAMP"
 
 say() { printf '%s\n' "$*"; }
+unique_path() {
+  local base="$1"
+  local candidate="$base"
+  local n=1
+  while [[ -e "$candidate" ]]; do
+    candidate="$base.$n"
+    n=$((n + 1))
+  done
+  printf '%s\n' "$candidate"
+}
 run() {
-  if [[ "$DRY_RUN" == "1" ]]; then
+  if [[ "$DRY_RUN" == "true" ]]; then
     say "[dry-run] $*"
   else
     eval "$@"
@@ -39,6 +49,7 @@ fi
 if [[ -d "$CLAUDE_DIR" ]]; then
   # Ensure the directory is not empty before backing up, or handle backup cleanly
   if [[ -n "$(ls -A "$CLAUDE_DIR" 2>/dev/null)" ]]; then
+    BACKUP_DIR="$(unique_path "$BACKUP_DIR")"
     run "cp -R \"$CLAUDE_DIR\" \"$BACKUP_DIR\""
     say "Backup: $BACKUP_DIR"
   else

@@ -11,9 +11,15 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
-const REGISTRY_PATH = process.env.SF_ADAPTER_REGISTRY || path.join(root, 'packages/hooks/adapters/registry.json');
-const SETTINGS_PATH = process.env.SF_ADAPTER_SETTINGS || path.join(root, 'packages/settings/settings.json');
-const ADAPTERS_DIR  = process.env.SF_ADAPTERS_DIR || path.join(root, 'packages/hooks/adapters');
+const cliArgs = process.argv.slice(2);
+function argValue(name) {
+  const i = cliArgs.indexOf(name);
+  return i >= 0 ? cliArgs[i + 1] : undefined;
+}
+
+const REGISTRY_PATH = process.env.SF_ADAPTER_REGISTRY || argValue('--registry') || path.join(root, 'packages/hooks/adapters/registry.json');
+const SETTINGS_PATH = process.env.SF_ADAPTER_SETTINGS || argValue('--settings') || path.join(root, 'packages/settings/settings.json');
+const ADAPTERS_DIR  = process.env.SF_ADAPTERS_DIR || argValue('--adapters-dir') || path.join(root, 'packages/hooks/adapters');
 const DEFAULT_SETTINGS_PATH = path.join(root, 'packages/settings/settings.json');
 
 let exitCode = 0;

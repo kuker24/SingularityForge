@@ -85,10 +85,14 @@ Untuk mem-bootstrap `.claude/` di root proyek tertentu agar tidak memengaruhi gl
 
 ```bash
 npm run doctor
+node scripts/doctor.mjs --json
+node scripts/doctor.mjs --fix-permissions
 npm run validate:adapters
+node scripts/validate-adapter-config.mjs --settings packages/settings/settings.json
+npm run verify:installers
 ```
 
-Keduanya harus PASS pada baseline Linux/CachyOS. Doctor mengecek Node.js >=20, global memory, rules, skills, hook executable, adapter executable, registry, dan konfigurasi default OFF.
+Semua command di atas harus PASS pada baseline Linux/CachyOS. Doctor mengecek Node.js >=20, global memory, rules, skills, hook executable, adapter executable, registry, dan konfigurasi default OFF. `--fix-permissions` hanya memperbaiki executable bit repo-local dan tidak menyentuh HOME user.
 
 ### Token Cache & Benchmark
 
