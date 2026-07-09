@@ -76,6 +76,7 @@ run "cp \"$REPO_ROOT/packages/templates/SingularityForge.md\" \"$CLAUDE_DIR/Sing
 
 # Ensure all scripts/hooks in target folder have execute permissions
 run "chmod +x \"$CLAUDE_DIR\"/hooks/*.sh 2>/dev/null || true"
+run "chmod +x \"$CLAUDE_DIR\"/hooks/adapters/*.sh 2>/dev/null || true"
 
 # Compile and optimize token cache
 if [ "$DRY_RUN" = false ]; then

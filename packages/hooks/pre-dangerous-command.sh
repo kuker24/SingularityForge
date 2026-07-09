@@ -36,4 +36,10 @@ for pattern in "${approval_patterns[@]}"; do
   fi
 done
 
+# Run Hook Adapter Framework
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+if [ -f "$SCRIPT_DIR/adapters/run-adapters.sh" ]; then
+  bash "$SCRIPT_DIR/adapters/run-adapters.sh" "pre-dangerous-command" "$INPUT" || true
+fi
+
 exit 0

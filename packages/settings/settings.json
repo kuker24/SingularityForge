@@ -4,7 +4,12 @@
     "verifyBeforeDone": true,
     "protectSecrets": true,
     "mcpDefault": "off",
-    "repomixDefault": "off"
+    "repomixDefault": "off",
+    "hookAdapters": {
+      "enabled": false,
+      "active": ["noop"],
+      "logDir": "~/.claude/logs"
+    }
   },
   "hooks": {
     "PreToolUse": [

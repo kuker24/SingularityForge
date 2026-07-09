@@ -123,7 +123,7 @@ SingularityForge/
 │   ├── global-memory/        # CLAUDE.md global
 │   ├── rules/                # Aturan domain (security, engineering, dll.)
 │   ├── skills/               # Task-specific SKILL.md
-│   ├── hooks/                # Bash & PowerShell hooks
+│   ├── hooks/                # Bash & PowerShell hooks (termasuk adapters/)
 │   ├── settings/             # Konfigurasi global settings.json
 │   ├── obsidian/             # Vault template untuk Second Brain
 │   └── templates/            # Template scaffold project

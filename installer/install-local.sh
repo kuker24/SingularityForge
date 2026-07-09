@@ -96,11 +96,29 @@ for src_hook in "$REPO_ROOT/packages/templates/project/.claude/hooks/"*; do
   fi
 done
 
+# Copy hook adapters to local directory
+if [ "$DRY_RUN" = true ]; then
+  echo "[dry-run] created directory '$CLAUDE_DIR/hooks/adapters'"
+else
+  mkdir -p "$CLAUDE_DIR/hooks/adapters"
+  echo "created: directory '$CLAUDE_DIR/hooks/adapters'"
+fi
+
+for src_adapter in "$REPO_ROOT/packages/hooks/adapters/"*; do
+  if [ -f "$src_adapter" ]; then
+    adapter_name=$(basename "$src_adapter")
+    safe_copy "$src_adapter" "$CLAUDE_DIR/hooks/adapters/$adapter_name"
+  fi
+done
+
 if [ "$DRY_RUN" = true ]; then
   echo "[dry-run] chmod ok: executable permissions for hook wrappers"
+  echo "[dry-run] chmod ok: executable permissions for hook adapters"
 else
   chmod +x "$CLAUDE_DIR/hooks/"*.sh 2>/dev/null || true
+  chmod +x "$CLAUDE_DIR/hooks/adapters/"*.sh 2>/dev/null || true
   echo "chmod ok: executable permissions for hook wrappers"
+  echo "chmod ok: executable permissions for hook adapters"
 fi
 
 # Verification of hooks locally

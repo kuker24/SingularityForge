@@ -115,6 +115,55 @@ if (invalidResult.status !== 1 || !invalidResult.stderr.includes('Invalid profil
   process.exit(1);
 }
 
+// 5. Hook adapters test validation
+const adapterFiles = ['noop.sh', 'logging.sh', 'audit.sh', 'external-placeholder.sh', 'run-adapters.sh'];
+const adaptersPath = path.join(root, 'packages/hooks/adapters');
+
+for (const file of adapterFiles) {
+  const fullPath = path.join(adaptersPath, file);
+  if (!existsSync(fullPath)) {
+    console.error(`Adapter file missing: ${file}`);
+    process.exit(1);
+  }
+  
+  // Executable check (skipped on Windows, but run on Linux)
+  if (process.platform !== 'win32') {
+    const permResult = spawnSync('test', ['-x', fullPath]);
+    if (permResult.status !== 0) {
+      console.error(`Adapter file not executable: ${file}`);
+      process.exit(1);
+    }
+  }
+
+  // Secrets scan
+  const content = fs.readFileSync(fullPath, 'utf8');
+  if (content.includes('API_KEY') || content.includes('SECRET') || content.match(/[a-zA-Z0-9_-]{30,}/) && !file.includes('run-adapters.sh') && !file.includes('logging.sh') && !file.includes('audit.sh')) {
+    // Basic heuristics to prevent secrets leakage
+    console.error(`Potential secrets/token hardcoded in adapter: ${file}`);
+    process.exit(1);
+  }
+}
+
+// 6. Test execution code returns 0
+const noopExec = spawnSync('bash', [path.join(adaptersPath, 'noop.sh')]);
+if (noopExec.status !== 0) {
+  console.error('noop.sh execution failed (status non-zero)');
+  process.exit(1);
+}
+
+const placeholderExec = spawnSync('bash', [path.join(adaptersPath, 'external-placeholder.sh')]);
+if (placeholderExec.status !== 0 || !placeholderExec.stdout.includes('External Hook Adapter is disabled')) {
+  console.error('external-placeholder.sh execution failed or did not report disabled state');
+  process.exit(1);
+}
+
+// 7. Verify settings default hookAdapters value
+const masterSettings = JSON.parse(fs.readFileSync(path.join(root, 'packages/settings/settings.json'), 'utf8'));
+if (!masterSettings.singularityForge.hookAdapters || masterSettings.singularityForge.hookAdapters.enabled !== false) {
+  console.error('Default settings.json hookAdapters must be disabled by default!');
+  process.exit(1);
+}
+
 // Clean up
 rmSync(tempProfileDir, { recursive: true, force: true });
 

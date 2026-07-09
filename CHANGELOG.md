@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 - Hook Adapter Framework
+
+### Added
+- Modular Hook Adapter Framework supporting `noop`, `logging`, `audit`, and `external-placeholder` integrations.
+- Fail-safe adapter execution pipeline (`run-adapters.sh`) wrapped in core Bash hooks.
+- Configurable settings model (`hookAdapters` schema) in settings configuration.
+- Detailed developer and operations documentation in `docs/HOOK_ADAPTERS.md`.
+
 ## 0.4.1 - Minimal Profile Token Reduction
 
 ### Fixed

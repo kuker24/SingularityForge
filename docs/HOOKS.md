@@ -97,3 +97,4 @@ For Windows PowerShell:
 ## References
 1. Claude Code Hooks Documentation: https://code.claude.com/docs/en/hooks
 2. Claude Code Hooks Guide: https://code.claude.com/docs/en/hooks-guide
+3. SingularityForge Hook Adapter Framework: [docs/HOOK_ADAPTERS.md](HOOK_ADAPTERS.md)
