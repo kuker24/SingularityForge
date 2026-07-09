@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - Workspace-Local Profile Implementation
+
+### Added
+- Project-local installation scripts (`installer/install-local.sh` and `installer/install-local.ps1`) to bootstrap workspace-level profiles.
+- Template-driven proxy hooks (`packages/templates/project/.claude/hooks/`) that delegate execution to global hooks dynamically.
+- Integration tests demonstrating successful proxy mapping on Linux CachyOS.
+
 ## 0.2.0 - Hardened Global Claude Code Runtime Distribution
 
 ### Added
