@@ -87,12 +87,18 @@ Untuk mengompilasi aturan/skills secara dinamis serta mengukur tingkat penghemat
 1. **Optimize Cache**:
    ```bash
    npm run token:optimize
+   # Atau compile profile spesifik
+   node scripts/optimize-token-cache.mjs --profile coding
+   node scripts/optimize-token-cache.mjs --profile security
+   node scripts/optimize-token-cache.mjs --profile all
    ```
 2. **Run Savings Benchmark**:
    ```bash
    npm run token:benchmark
+   # Atau ukur seluruh profile sekaligus
+   node scripts/token-benchmark.mjs --profile all
    ```
-   *Laporan statistik lengkap akan dicetak dan disimpan di `reports/token/token-benchmark.md`.*
+   *Laporan statistik lengkap multi-profile disimpan di `reports/token/profile-token-benchmark.md`.*
 
 ---
 

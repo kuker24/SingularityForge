@@ -15,7 +15,8 @@ const required = [
   'installer/install.ps1',
   'installer/install-local.sh',
   'installer/install-local.ps1',
-  'scripts/optimize-token-cache.mjs'
+  'scripts/optimize-token-cache.mjs',
+  'scripts/token-benchmark.mjs'
 ];
 
 const missing = required.filter((file) => !existsSync(path.join(root, file)));
@@ -55,5 +56,66 @@ if (realInstall2.status !== 0 || !realInstall2.stdout.includes('backed up:')) {
 
 // Clean up
 rmSync(testDir, { recursive: true, force: true });
+
+// Profile compilation and safety tests
+const testProfiles = ['minimal', 'coding', 'security'];
+const tempProfileDir = path.join(root, 'tests/tmp-profile-test');
+
+if (existsSync(tempProfileDir)) {
+  rmSync(tempProfileDir, { recursive: true, force: true });
+}
+mkdirSync(tempProfileDir, { recursive: true });
+
+// Copy a basic settings.json so optimizer works in target dir
+mkdirSync(path.join(tempProfileDir, '.claude'), { recursive: true });
+const dummySettings = JSON.stringify({ singularityForge: { profile: 'minimal' } });
+const fs = await import('node:fs');
+fs.writeFileSync(path.join(tempProfileDir, '.claude/settings.json'), dummySettings, 'utf8');
+
+// 1. Profile compilation tests
+for (const p of testProfiles) {
+  const compResult = spawnSync('node', [
+    path.join(root, 'scripts/optimize-token-cache.mjs'),
+    '--profile', p,
+    path.join(tempProfileDir, '.claude')
+  ], { encoding: 'utf8' });
+  if (compResult.status !== 0 || !compResult.stdout.includes('Optimization Completed Successfully.')) {
+    console.error(`Profile optimizer compile failed for '${p}':`, compResult.stderr || compResult.stdout);
+    process.exit(1);
+  }
+}
+
+// 2. Security profile must not lose security rule check
+const securityCachePath = path.join(tempProfileDir, '.claude/CLAUDE.md'); // Since it was the last compiled single forced profile
+const securityCacheContent = fs.readFileSync(securityCachePath, 'utf8');
+if (!securityCacheContent.includes('Security Rules') && !securityCacheContent.includes('security.md')) {
+  console.error('Security verification failed: security profile lost security rules!');
+  process.exit(1);
+}
+
+// 3. Benchmark all test
+const benchResult = spawnSync('node', [
+  path.join(root, 'scripts/token-benchmark.mjs'),
+  '--profile', 'all',
+  path.join(tempProfileDir, '.claude')
+], { encoding: 'utf8' });
+if (benchResult.status !== 0 || !benchResult.stdout.includes('Profile Token Savings Benchmark')) {
+  console.error('Benchmark all failed to run correctly:', benchResult.stderr || benchResult.stdout);
+  process.exit(1);
+}
+
+// 4. Invalid profile error test
+const invalidResult = spawnSync('node', [
+  path.join(root, 'scripts/optimize-token-cache.mjs'),
+  '--profile', 'invalid-profile-name',
+  path.join(tempProfileDir, '.claude')
+], { encoding: 'utf8' });
+if (invalidResult.status !== 1 || !invalidResult.stderr.includes('Invalid profile')) {
+  console.error('Invalid profile error validation failed:', invalidResult.stderr || invalidResult.stdout);
+  process.exit(1);
+}
+
+// Clean up
+rmSync(tempProfileDir, { recursive: true, force: true });
 
 console.log('Smoke test passed.');

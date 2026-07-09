@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 - Profile-Aware Token Budgets & Safety Checks
+
+### Added
+- Implemented Profile-Aware Token Budget policies (`docs/PROFILE_TOKEN_BUDGETS.md`) for all active configurations.
+- Extended `scripts/optimize-token-cache.mjs` with `--profile <name>` flag and `all` profile target compilation.
+- Extended `scripts/token-benchmark.mjs` to measure relative context savings compared to unoptimized `max` capability baseline.
+- Implemented multi-profile verification safety validations (ensuring `security`, `coding`, and `release` keep their mandatory rules).
+- Auto-generation of multi-profile report in `reports/token/profile-token-benchmark.md`.
+
 ## 0.3.1 - Token Savings Benchmark Evidence
 
 ### Added
