@@ -23,7 +23,7 @@ Filosofi utama:
 2. **PowerShell Windows Support**: PowerShell hooks (`.ps1`) disediakan sejajar dengan Unix hooks untuk mendukung sistem Windows.
 3. **Idempotent Lints & Installers**: Installer mendeteksi status Claude Code, membuat backup di `~/.claude.singularityforge.backup.<timestamp>`, memvalidasi source file sebelum menyalin, dan mengonfigurasi permissions secara otomatis.
 4. **AstralForge Import Pipeline**: Scripts import modular `import-astralforge-skills.mjs` untuk mengunduh, mengaudit dari malware/destructive command, dan meletakkan skill baru ke staged review.
-5. **Obsidian Integration**: Template Markdown siap pakai untuk Session Logs, Debug Notes, dan Architecture Decision Records (ADR).
+5. **Obsidian Memory Pack**: Vault Markdown opt-in untuk project overview, ADR, debug notes, release notes, session logs, dan handoff antar sesi Claude Code.
 6. **Token Cache & Memory Optimizer**: Mengompilasi dan memampatkan rules/skills relevan berdasarkan profile aktif (`minimal`/`coding`/`security`/dll.) ke dalam sebuah berkas memori tunggal `CLAUDE.md` teroptimasi secara dinamis guna menjaga budget context token tetap efisien.
 7. **Linux Runtime Doctor & Adapter Validator**: `npm run doctor` memeriksa kesiapan runtime Linux/CachyOS, sedangkan `npm run validate:adapters` memvalidasi registry adapter, default OFF, dan tidak ada network call default.
 
@@ -31,7 +31,16 @@ Filosofi utama:
 
 ## Obsidian Memory Pack (Optional)
 
-Obsidian Memory Pack menyediakan durable project memory berbasis Markdown untuk project overview, ADR, debug notes, release notes, session logs, dan handoff. Paket ini **opt-in**: tidak memasang aplikasi Obsidian dan tidak diaktifkan oleh installer runtime default.
+Obsidian Memory Pack adalah paket memory berbasis Markdown untuk membuat Claude Code tidak mulai dari nol setiap sesi. Pack ini menyimpan project overview, tech stack, coding standards, ADR, debug notes, release notes, session logs, dan handoff di vault lokal.
+
+Pack ini **opt-in dan non-destructive**:
+- Tidak memasang aplikasi Obsidian otomatis.
+- Tidak memasang external Obsidian skills otomatis.
+- Tidak mengaktifkan MCP, Repomix, Serena, Context7, OMNI, webhook, atau network integration.
+- Tidak overwrite file vault yang sudah ada kecuali memakai `--force` secara eksplisit.
+- Tidak boleh menyimpan secret, token, API key, `.env`, credential, atau private key.
+
+### Setup vault
 
 ```bash
 npm run obsidian:setup -- --dry-run --target ~/SingularityForge-Vault
@@ -39,7 +48,38 @@ npm run obsidian:setup -- --target ~/SingularityForge-Vault
 npm run obsidian:verify
 ```
 
-Lihat [docs/OBSIDIAN_MEMORY_PACK.md](docs/OBSIDIAN_MEMORY_PACK.md).
+### Cara pakai saat mulai sesi Claude baru
+
+Tempel instruksi ini di awal sesi Claude Code:
+
+```txt
+Gunakan SingularityForge Obsidian Memory Pack.
+Cari dulu catatan relevan di ~/SingularityForge-Vault sebelum bekerja.
+Baca hanya note yang relevan.
+Di akhir sesi, tulis session log dan handoff singkat ke vault.
+Jangan simpan secret.
+```
+
+### Cara pakai saat mulai project baru
+
+```txt
+Buat project memory note untuk project ini di ~/SingularityForge-Vault/01-Projects/.
+Isi project overview, tech stack, aturan coding, file penting, dan next step.
+Gunakan format SingularityForge Obsidian Memory Pack.
+Jangan simpan secret.
+```
+
+### Cara pakai saat selesai kerja
+
+```txt
+Tulis session log dan handoff ke ~/SingularityForge-Vault/05-Session-Logs/.
+Cantumkan goal, files touched, commands run, verification result, risks, dan next step.
+Jangan simpan secret.
+```
+
+Lihat panduan lengkap di [docs/OBSIDIAN_MEMORY_PACK.md](docs/OBSIDIAN_MEMORY_PACK.md).
+
+---
 
 ## Production Usage (Linux/CachyOS)
 
@@ -177,7 +217,7 @@ SingularityForge/
 
 ## Status Verifikasi (Verification Matrix)
 
-Lihat status terkini di [docs/VERIFICATION_MATRIX.md](docs/VERIFICATION_MATRIX.md). 
+Lihat status terkini di [docs/VERIFICATION_MATRIX.md](docs/VERIFICATION_MATRIX.md).
 Laporan pengujian lokal yang sesungguhnya disimpan di folder [reports/](reports/).
 
 ## Safety Warning
