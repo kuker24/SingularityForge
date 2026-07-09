@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.0 - Linux Installer & Environment Hardening
+
+### Added
+- `scripts/verify-linux-installers.mjs` for isolated temp-HOME global/local installer verification.
+- `npm run verify:installers` package script.
+- `scripts/doctor.mjs --json` with structured `status`, `checks`, `summary`, `warnings`, and `failures` fields.
+- `scripts/doctor.mjs --fix-permissions` to repair repo-local executable bits for `installer/*.sh` and `packages/hooks/**/*.sh` only.
+- `scripts/validate-adapter-config.mjs --settings <path>` and related CLI path overrides.
+- Evidence reports for Linux installer and doctor hardening.
+
+### Fixed
+- Global installer dry-run boolean handling so real installs run token cache optimization correctly.
+- Installer backup path generation to avoid overwriting backups during rapid reinstall.
+
 ## 0.6.0 - Linux Runtime Completeness
 
 ### Added

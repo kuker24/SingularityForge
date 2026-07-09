@@ -44,6 +44,15 @@ jobs:
       - name: Doctor check
         run: npm run doctor
 
+      - name: Doctor JSON check
+        run: node scripts/doctor.mjs --json
+
+      - name: Doctor fix permissions check
+        run: node scripts/doctor.mjs --fix-permissions
+
+      - name: Verify Linux installers
+        run: npm run verify:installers
+
   windows-verify:
     runs-on: windows-latest
     steps:

@@ -49,6 +49,7 @@ Untuk mengonfigurasi adapter, edit berkas settings `~/.claude/settings.json`:
 Gunakan command berikut untuk memvalidasi konfigurasi adapter dan registry:
 ```bash
 npm run validate:adapters
+node scripts/validate-adapter-config.mjs --settings packages/settings/settings.json
 ```
 
 Validator memeriksa:

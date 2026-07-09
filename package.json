@@ -1,6 +1,6 @@
 {
   "name": "singularityforge",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "description": "Global Claude Code runtime distribution with skills, rules, hooks, installers, and evidence discipline.",
@@ -15,7 +15,8 @@
     "token:optimize": "node scripts/optimize-token-cache.mjs",
     "token:benchmark": "node scripts/token-benchmark.mjs",
     "token:report": "node scripts/token-report.mjs",
-    "mutation": "node -e \"console.log('Manual only: mutation testing is intentionally not auto-run. Configure Stryker before use.')\""
+    "mutation": "node -e \"console.log('Manual only: mutation testing is intentionally not auto-run. Configure Stryker before use.')\"",
+    "verify:installers": "node scripts/verify-linux-installers.mjs"
   },
   "keywords": [
     "claude-code",

@@ -1,0 +1,14 @@
+{
+  "singularityForge": {
+    "profile": "minimal",
+    "verifyBeforeDone": true,
+    "protectSecrets": true,
+    "mcpDefault": "off",
+    "repomixDefault": "off",
+    "hookAdapters": {
+      "enabled": true,
+      "active": ["noop"],
+      "logDir": ""
+    }
+  }
+}

@@ -45,6 +45,17 @@ fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+unique_path() {
+  local base="$1"
+  local candidate="$base"
+  local n=1
+  while [[ -e "$candidate" ]]; do
+    candidate="$base.$n"
+    n=$((n + 1))
+  done
+  printf '%s\n' "$candidate"
+}
+
 # Create directories
 if [ "$DRY_RUN" = true ]; then
   echo "[dry-run] created directory '$CLAUDE_DIR'"
@@ -64,7 +75,8 @@ safe_copy() {
     # File exists, back it up
     local timestamp
     timestamp=$(date +%Y%m%d-%H%M%S)
-    local backup_file="${dest}.backup.${timestamp}"
+    local backup_file
+    backup_file="$(unique_path "${dest}.backup.${timestamp}")"
     
     if [ "$DRY_RUN" = true ]; then
       echo "[dry-run] backed up '$dest' to '$backup_file'"

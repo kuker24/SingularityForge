@@ -216,9 +216,9 @@ const baseRegistry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 fs.writeFileSync(tmpRegistryPath, JSON.stringify(baseRegistry, null, 2), 'utf8');
 function runValidator(settings, extraEnv = {}) {
   fs.writeFileSync(tmpSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
-  return spawnSync('node', [validatorScript], {
+  return spawnSync('node', [validatorScript, '--settings', tmpSettingsPath, '--registry', tmpRegistryPath], {
     encoding: 'utf8',
-    env: { ...process.env, SF_ADAPTER_SETTINGS: tmpSettingsPath, SF_ADAPTER_REGISTRY: tmpRegistryPath, ...extraEnv }
+    env: { ...process.env, ...extraEnv }
   });
 }
 
@@ -273,6 +273,14 @@ if (runValidator(settingsCase).status !== 0) {
   process.exit(1);
 }
 
+// invalid JSON must FAIL
+fs.writeFileSync(tmpSettingsPath, '{ invalid json', 'utf8');
+const invalidJsonResult = spawnSync('node', [validatorScript, '--settings', tmpSettingsPath, '--registry', tmpRegistryPath], { encoding: 'utf8' });
+if (invalidJsonResult.status === 0) {
+  console.error('Validator should fail invalid JSON case');
+  process.exit(1);
+}
+
 // external-placeholder remains default OFF and no network call
 const externalPlaceholder = baseRegistry.adapters.find((a) => a.name === 'external-placeholder');
 if (!externalPlaceholder || externalPlaceholder.defaultEnabled !== false || externalPlaceholder.networkCall !== false || externalPlaceholder.placeholder !== true) {
@@ -282,10 +290,31 @@ if (!externalPlaceholder || externalPlaceholder.defaultEnabled !== false || exte
 
 rmSync(validatorTmp, { recursive: true, force: true });
 
-// 10. doctor.mjs exits 0 (PASS or WARN)
-const doctorResult = spawnSync('node', [path.join(root, 'scripts/doctor.mjs')], { encoding: 'utf8' });
+// 10. doctor.mjs exits 0 (PASS or WARN) and JSON mode is valid
+const doctorScript = path.join(root, 'scripts/doctor.mjs');
+const doctorResult = spawnSync('node', [doctorScript], { encoding: 'utf8' });
 if (doctorResult.status !== 0) {
   console.error('doctor.mjs exited with FAIL:', doctorResult.stderr || doctorResult.stdout);
+  process.exit(1);
+}
+const doctorJsonResult = spawnSync('node', [doctorScript, '--json'], { encoding: 'utf8' });
+if (doctorJsonResult.status !== 0) {
+  console.error('doctor.mjs --json exited with FAIL:', doctorJsonResult.stderr || doctorJsonResult.stdout);
+  process.exit(1);
+}
+try {
+  const parsedDoctor = JSON.parse(doctorJsonResult.stdout);
+  if (!parsedDoctor.status || !Array.isArray(parsedDoctor.checks) || !parsedDoctor.summary || !Array.isArray(parsedDoctor.warnings) || !Array.isArray(parsedDoctor.failures)) {
+    console.error('doctor.mjs --json missing required fields');
+    process.exit(1);
+  }
+} catch (error) {
+  console.error('doctor.mjs --json output is not valid JSON:', error.message);
+  process.exit(1);
+}
+
+if (!existsSync(path.join(root, 'scripts/verify-linux-installers.mjs'))) {
+  console.error('verify-linux-installers.mjs missing');
   process.exit(1);
 }
 

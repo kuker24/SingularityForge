@@ -33,7 +33,10 @@ Status vocabulary:
 | Adapter Config Validator | Verified | `npm run validate:adapters` | `scripts/validate-adapter-config.mjs` |
 | Adapter Registry | Verified | `npm run validate:adapters` | `packages/hooks/adapters/registry.json` |
 | Doctor Command | Verified | `npm run doctor` | `scripts/doctor.mjs` |
+| Doctor JSON Output | Verified | `node scripts/doctor.mjs --json` | `reports/tool-evidence/linux-doctor-hardening.md` |
+| Doctor Fix Permissions | Verified | `node scripts/doctor.mjs --fix-permissions` | `reports/tool-evidence/linux-doctor-hardening.md` |
 | Linux/CachyOS Runtime | Verified | `npm run doctor` + installer dry-run | `reports/install-verification/linux-runtime-completeness.md` |
+| Linux Installer Hardening | Verified | `npm run verify:installers` | `reports/install-verification/linux-installer-hardening.md` |
 | Windows Hook Adapters | Experimental | `pwsh -File installer/install-local.ps1 -DryRun` | `reports/hooks/windows-hook-adapter-verification.md` |
 | Windows Native Hardening | Experimental | CI `windows-latest` edge-case + write-to-disk tests | `reports/hooks/windows-native-hardening-verification.md` |
 | PowerShell Hook Support | Experimental | `find packages/hooks -name "*.ps1"` | PowerShell hook files, not locally verified on Windows |

@@ -104,8 +104,11 @@ Fungsi:
 - Memastikan Node.js >=20.
 - Memastikan rules/skills/global memory tersedia.
 - Memastikan Bash hooks dan Bash adapters executable pada Linux.
+- Memperbaiki executable bit repo-local via `doctor --fix-permissions` untuk `installer/*.sh` dan `packages/hooks/**/*.sh`.
+- Menghasilkan output machine-readable via `doctor --json`.
 - Memastikan adapter resmi terdaftar, default OFF, dan tidak memiliki network call default.
 - Memastikan konfigurasi eksternal tetap default OFF.
+- Memverifikasi installer Linux di temp HOME via `npm run verify:installers`.
 
 ### 6. Profiles Layer
 
