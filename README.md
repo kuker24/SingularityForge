@@ -80,6 +80,20 @@ Untuk mem-bootstrap `.claude/` di root proyek tertentu agar tidak memengaruhi gl
    ```
    *Catatan: Jika berkas `.claude/settings.json` atau `CLAUDE.md` sudah ada di dalam proyek target, installer lokal akan secara otomatis membackup berkas tersebut dengan suffix timestamp.*
 
+### Token Cache & Benchmark
+
+Untuk mengompilasi aturan/skills secara dinamis serta mengukur tingkat penghematan token budget:
+
+1. **Optimize Cache**:
+   ```bash
+   npm run token:optimize
+   ```
+2. **Run Savings Benchmark**:
+   ```bash
+   npm run token:benchmark
+   ```
+   *Laporan statistik lengkap akan dicetak dan disimpan di `reports/token/token-benchmark.md`.*
+
 ---
 
 ## Profil Konteks (Profile Context Budget)

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 - Token Savings Benchmark Evidence
+
+### Added
+- Integrated empirical Token Savings Benchmark engine (`scripts/token-benchmark.mjs`) to measure compression efficiency.
+- Auto-generation of benchmark report in `reports/token/token-benchmark.md`.
+- Comprehensive benchmark guide in `docs/TOKEN_BENCHMARK.md`.
+
 ## 0.3.0 - Token Cache / Global Memory Optimizer
 
 ### Added
