@@ -22,13 +22,21 @@ Status vocabulary:
 | Skill substantive audit | Verified | `npm run audit:skills` | `reports/skill-audit-summary.md` |
 | settings.json configuration | Verified | `test -f packages/settings/settings.json` | repo file & `docs/HOOKS.md` |
 | Linux installer | Verified | `bash installer/install.sh --dry-run` | `reports/install-verification/dry-run.md` |
+| Global installer | Verified | `npm run verify:installers` | `reports/install-verification/linux-installer-hardening.md` |
 | Linux local installer | Verified | `bash installer/install-local.sh --dry-run` | `tests/smoke.test.mjs` |
+| Local installer | Verified | `npm run verify:installers` | `reports/install-verification/linux-installer-hardening.md` |
+| Non-destructive backup | Verified | `npm run verify:installers` | timestamp backup checks |
+| Dry-run | Verified | `bash installer/install.sh --dry-run` + local dry-run | installer hardening report |
 | Token cache optimizer | Verified | `node scripts/optimize-token-cache.mjs` | `tests/smoke.test.mjs` |
+| Token optimizer | Verified | `npm run token:optimize` | token reports |
 | Token savings benchmark | Verified | `node scripts/token-benchmark.mjs --profile all` | `reports/token/profile-token-benchmark.md` |
+| Profile-aware budgets | Verified | `node scripts/token-benchmark.mjs --profile all` | all 6 profiles PASS |
 | macOS installer | Supported | `bash installer/install-macos.sh --dry-run` | Script ready, not locally verified on macOS |
-| Windows installer | Supported | `powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun` | Script ready, not locally verified on Windows |
+| Windows installer | Experimental | `powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun` | Script ready, not native user-machine verified |
 | Obsidian vault template | Supported | `ls packages/obsidian` | scaffold provided |
 | Hooks scaffold | Verified | `find packages/hooks -type f` | repo files |
+| Bash hooks | Verified | `npm run doctor` | executable checks |
+| Bash adapters | Verified | `npm run doctor` | executable checks |
 | Hook Adapter Framework | Verified | `npm run test:unit` | `reports/hooks/hook-adapter-verification.md` |
 | Adapter Config Validator | Verified | `npm run validate:adapters` | `scripts/validate-adapter-config.mjs` |
 | Adapter Registry | Verified | `npm run validate:adapters` | `packages/hooks/adapters/registry.json` |
@@ -47,6 +55,8 @@ Status vocabulary:
 | Semgrep CE | Verified (CI) | `semgrep scan --config p/default --metrics=off` | GitHub Actions run, `reports/security/security-tooling-status.md` |
 | OSV-Scanner | Supported | `osv-scanner scan source -r .` | network-dependent, not hard-blocking |
 | Gitleaks | Verified (CI) | `gitleaks git --redact .` | GitHub Actions run, `reports/security/security-tooling-status.md` |
+| Security workflow | Verified (CI) | GitHub Actions Security | gitleaks + semgrep + dependency note |
+| Release process | Verified | `docs/RELEASE_PROCESS.md` + release checklist | v1.0.0 gate |
 | Knip | Supported | `npx knip` | config scaffold |
 | Playwright | Supported | `npx playwright test --project=chromium` | optional, placeholder |
 | Repomix | Supported | `repomix --compress` | opt-in only |

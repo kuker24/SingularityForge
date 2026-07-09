@@ -2,6 +2,8 @@
 
 **SingularityForge** adalah distribusi runtime global yang aman, modular, dan terstandardisasi untuk Claude Code dan AI coding agent. Repo ini menyediakan global memory, rules, skills, hooks (Bash & PowerShell), installer idempotent lintas OS, Obsidian second brain template, QA gate, security gate, release automation, dan evidence discipline.
 
+Status production: **Linux/CachyOS Stable**. Windows PowerShell support tetap **Experimental**.
+
 Filosofi utama:
 - **Teacher, not workhorse**: Mengajarkan agent berpikir, bukan hanya menulis baris kode.
 - **Rules over vibes**: Mengandalkan aturan tertulis daripada asumsi model.
@@ -26,6 +28,19 @@ Filosofi utama:
 7. **Linux Runtime Doctor & Adapter Validator**: `npm run doctor` memeriksa kesiapan runtime Linux/CachyOS, sedangkan `npm run validate:adapters` memvalidasi registry adapter, default OFF, dan tidak ada network call default.
 
 ---
+
+## Production Usage (Linux/CachyOS)
+
+Untuk baseline stable, jalankan:
+```bash
+bash installer/install.sh --dry-run
+bash installer/install.sh
+npm run doctor
+npm run validate:adapters
+npm run verify:installers
+```
+
+Semua fitur eksternal (MCP, Repomix, Serena, Context7, OMNI, webhook) default OFF.
 
 ## Quick Install & Usage
 

@@ -1,6 +1,6 @@
 # Profile-Aware Token Savings Benchmark Report
 
-Generated: 2026-07-09T16:57:20.692Z
+Generated: 2026-07-09T17:02:35.463Z
 Target Directory: `/home/fahmi/.claude`
 Overall Status: **PASS**
 

@@ -31,9 +31,23 @@ Use this checklist for every release cycle to ensure quality, security, and repr
   ```bash
   npm run token:report
   ```
-- [ ] Run installer dry-run:
+- [ ] Run token benchmarks:
   ```bash
+  npm run token:benchmark
+  node scripts/token-benchmark.mjs --profile all
+  ```
+- [ ] Run adapter validator and doctor:
+  ```bash
+  npm run validate:adapters
+  npm run doctor
+  node scripts/doctor.mjs --json
+  node scripts/doctor.mjs --fix-permissions
+  ```
+- [ ] Run installer hardening verification:
+  ```bash
+  npm run verify:installers
   bash installer/install.sh --dry-run
+  bash installer/install-local.sh --dry-run "/tmp/singularityforge release test"
   ```
 - [ ] Verify that all Unix hook scripts are marked executable:
   ```bash
@@ -59,8 +73,18 @@ Use this checklist for every release cycle to ensure quality, security, and repr
 
 ## Release Phase
 
-- [ ] Git commit created with title `release: cut version vX.Y.Z`.
+- [ ] Confirm tag does not already exist:
+  ```bash
+  git tag --list "vX.Y.Z"
+  git ls-remote --tags origin vX.Y.Z
+  ```
+- [ ] Git commit created with release-specific title.
 - [ ] Git tag created locally matching `vX.Y.Z`.
 - [ ] Branch pushed to `main`.
 - [ ] Tags pushed to `origin`.
-- [ ] GitHub Release draft created with release notes and summary.
+- [ ] GitHub Release created with release notes and summary.
+- [ ] Verify tag and release live:
+  ```bash
+  git ls-remote --tags origin vX.Y.Z
+  gh release view vX.Y.Z
+  ```
