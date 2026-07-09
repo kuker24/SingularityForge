@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 - Obsidian Memory Pack
+
+### Added
+- Optional, non-destructive Obsidian/Markdown Memory Pack.
+- Vault folder template and concise templates for project memory, ADR, debug, release, session log, handoff, and daily notes.
+- `obsidian:setup` with dry-run and explicit `--force` overwrite behavior.
+- `obsidian:verify` for pack, template safety, setup idempotency, path-with-spaces, and overwrite checks.
+- Strengthened `obsidian-sync` and `session-log` skills for concise durable memory and secret safety.
+- CI, verification matrix, evidence report, and Memory Pack documentation.
+
 ## 1.0.0 - Stable Linux Runtime
 
 ### Stable

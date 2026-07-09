@@ -29,6 +29,18 @@ Filosofi utama:
 
 ---
 
+## Obsidian Memory Pack (Optional)
+
+Obsidian Memory Pack menyediakan durable project memory berbasis Markdown untuk project overview, ADR, debug notes, release notes, session logs, dan handoff. Paket ini **opt-in**: tidak memasang aplikasi Obsidian dan tidak diaktifkan oleh installer runtime default.
+
+```bash
+npm run obsidian:setup -- --dry-run --target ~/SingularityForge-Vault
+npm run obsidian:setup -- --target ~/SingularityForge-Vault
+npm run obsidian:verify
+```
+
+Lihat [docs/OBSIDIAN_MEMORY_PACK.md](docs/OBSIDIAN_MEMORY_PACK.md).
+
 ## Production Usage (Linux/CachyOS)
 
 Untuk baseline stable, jalankan:

@@ -16,13 +16,35 @@ const required = [
   'installer/install-local.sh',
   'installer/install-local.ps1',
   'scripts/optimize-token-cache.mjs',
-  'scripts/token-benchmark.mjs'
+  'scripts/token-benchmark.mjs',
+  'scripts/setup-obsidian-vault.mjs',
+  'scripts/verify-obsidian-pack.mjs',
+  'packages/obsidian/README.md',
+  'packages/skills/obsidian-sync/SKILL.md'
 ];
 
 const missing = required.filter((file) => !existsSync(path.join(root, file)));
 if (missing.length > 0) {
   console.error('Missing required files:');
   for (const file of missing) console.error(`- ${file}`);
+  process.exit(1);
+}
+
+// Obsidian Memory Pack file and verifier smoke check
+const requiredObsidianTemplates = [
+  'project-overview.md', 'tech-stack.md', 'coding-standards.md',
+  'architecture-decision-record.md', 'session-log.md', 'session-handoff.md',
+  'debug-note.md', 'release-note.md', 'daily-note.md'
+];
+for (const template of requiredObsidianTemplates) {
+  if (!existsSync(path.join(root, 'packages/obsidian/templates', template))) {
+    console.error(`Obsidian template missing: ${template}`);
+    process.exit(1);
+  }
+}
+const obsidianVerify = spawnSync('node', [path.join(root, 'scripts/verify-obsidian-pack.mjs')], { encoding: 'utf8' });
+if (obsidianVerify.status !== 0 || !obsidianVerify.stdout.includes('FAIL count: 0')) {
+  console.error('Obsidian Memory Pack verification failed:', obsidianVerify.stderr || obsidianVerify.stdout);
   process.exit(1);
 }
 
