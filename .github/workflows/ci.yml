@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Typecheck scripts
+        run: npm run typecheck
+
+      - name: Unit smoke tests
+        run: npm run test:unit
+
+      - name: Verify skills
+        run: npm run verify:skills
+
+      - name: Audit skills
+        run: npm run audit:skills
+
+      - name: Token report
+        run: npm run token:report
