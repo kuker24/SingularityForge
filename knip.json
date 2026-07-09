@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": [
+    "scripts/*.mjs",
+    "tests/*.mjs"
+  ],
+  "project": [
+    "**/*.{js,mjs,cjs,ts,tsx,json}"
+  ],
+  "ignore": [
+    "node_modules/**",
+    "reports/**"
+  ]
+}
