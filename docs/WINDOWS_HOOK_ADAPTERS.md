@@ -47,3 +47,27 @@ powershell -ExecutionPolicy Bypass -File installer/install-local.ps1 -TargetDir 
 powershell -ExecutionPolicy Bypass -File packages/hooks/adapters/run-adapters.ps1 "pre-dangerous-command" "command_preview"
 ```
 Jika diaktifkan, hasil output log akan terbuat di target folder (default `$HOME\.claude\logs\hooks.log` dan `$HOME\.claude\logs\audit.log`).
+
+---
+
+## Native Windows Hardening (v0.5.2)
+
+Pada v0.5.2, test harness berikut ditambahkan ke CI `windows-latest` untuk meningkatkan keandalan adapter:
+
+### Edge-case `run-adapters.ps1`
+| Kondisi | Expected |
+|---|---|
+| Tidak ada `settings.json` | Exit 0 (fail-safe) |
+| `settings.json` kosong | Exit 0 (fail-safe) |
+| `settings.json` corrupt | Exit 0 (fail-safe) |
+| `hookAdapters.enabled = false` | Exit 0 (default OFF) |
+| `hookAdapters.enabled = true` + `active = [noop]` | Exit 0 (adapter dijalankan) |
+| `hookAdapters.active = []` | Exit 0 (tidak ada adapter dieksekusi) |
+
+### Write-to-disk `logging.ps1` dan `audit.ps1`
+Diverifikasi bahwa jika `SF_HOOK_ADAPTERS_ENABLED=true`, kedua adapter berhasil membuat log file ke path `$RUNNER_TEMP` (path Windows). Lihat: `reports/hooks/windows-native-hardening-verification.md`.
+
+### Installer Dry-Run
+Diverifikasi bahwa `install-local.ps1 -DryRun` tidak membuat direktori `.claude` di target path.
+
+> **Catatan:** Semua test dijalankan di GitHub Actions `windows-latest`. Status Windows tetap **Experimental** sampai ada evidence dari native user machine.

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2 - Native Windows Hardening (Experimental)
+
+### Added
+- CI `windows-latest` edge-case tests untuk `run-adapters.ps1`: no settings.json, empty, corrupt, enabled=false, enabled=true+noop, active=[].
+- CI `windows-latest` write-to-disk tests untuk `logging.ps1` (hooks.log) dan `audit.ps1` (audit.log).
+- CI `windows-latest` installer dry-run test: verifikasi tidak ada file ditulis saat `-DryRun`.
+- Evidence report baru: `reports/hooks/windows-native-hardening-verification.md`.
+- Updated `docs/WINDOWS_HOOK_ADAPTERS.md` dengan section Native Windows Hardening.
+
 ## 0.5.1 - Windows PowerShell Hook Adapter Parity (Experimental)
 
 ### Added

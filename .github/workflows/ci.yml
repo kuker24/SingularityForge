@@ -46,9 +46,131 @@ jobs:
       - name: Unit smoke tests
         run: npm run test:unit
 
-      - name: Run PowerShell Adapter Tests
+      - name: PowerShell adapter basic exit-code tests
         shell: pwsh
         run: |
-          powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/noop.ps1
-          powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/external-placeholder.ps1
-          powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/run-adapters.ps1
+          # noop.ps1 harus exit 0
+          & powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/noop.ps1
+          if ($LASTEXITCODE -ne 0) { throw "noop.ps1 returned non-zero: $LASTEXITCODE" }
+
+          # external-placeholder.ps1 disabled harus exit 0
+          & powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/external-placeholder.ps1
+          if ($LASTEXITCODE -ne 0) { throw "external-placeholder.ps1 returned non-zero: $LASTEXITCODE" }
+
+      - name: PowerShell run-adapters edge-case tests
+        shell: pwsh
+        run: |
+          $TempRoot = Join-Path $env:RUNNER_TEMP "sf-windows-hardening"
+          New-Item -ItemType Directory -Force -Path $TempRoot | Out-Null
+
+          # Case 1: tidak ada settings.json - harus exit 0
+          $dir1 = Join-Path $TempRoot "no-settings"
+          New-Item -ItemType Directory -Force -Path $dir1 | Out-Null
+          Push-Location $dir1
+          & powershell.exe -ExecutionPolicy Bypass -File "$env:GITHUB_WORKSPACE\packages\hooks\adapters\run-adapters.ps1" "test-hook" "test-event"
+          if ($LASTEXITCODE -ne 0) { throw "run-adapters.ps1 (no settings.json) returned non-zero: $LASTEXITCODE" }
+          Pop-Location
+
+          # Case 2: settings.json kosong - harus exit 0
+          $dir2 = Join-Path $TempRoot "empty-settings"
+          $claudeDir2 = Join-Path $dir2 ".claude"
+          New-Item -ItemType Directory -Force -Path $claudeDir2 | Out-Null
+          Set-Content -Path (Join-Path $claudeDir2 "settings.json") -Value "" -Encoding utf8
+          Push-Location $dir2
+          & powershell.exe -ExecutionPolicy Bypass -File "$env:GITHUB_WORKSPACE\packages\hooks\adapters\run-adapters.ps1" "test-hook" "test-event"
+          if ($LASTEXITCODE -ne 0) { throw "run-adapters.ps1 (empty settings.json) returned non-zero: $LASTEXITCODE" }
+          Pop-Location
+
+          # Case 3: settings.json corrupt - harus exit 0
+          $dir3 = Join-Path $TempRoot "corrupt-settings"
+          $claudeDir3 = Join-Path $dir3 ".claude"
+          New-Item -ItemType Directory -Force -Path $claudeDir3 | Out-Null
+          Set-Content -Path (Join-Path $claudeDir3 "settings.json") -Value "{ this is not valid json {{{{" -Encoding utf8
+          Push-Location $dir3
+          & powershell.exe -ExecutionPolicy Bypass -File "$env:GITHUB_WORKSPACE\packages\hooks\adapters\run-adapters.ps1" "test-hook" "test-event"
+          if ($LASTEXITCODE -ne 0) { throw "run-adapters.ps1 (corrupt settings.json) returned non-zero: $LASTEXITCODE" }
+          Pop-Location
+
+          # Case 4: enabled false - harus exit 0
+          $dir4 = Join-Path $TempRoot "disabled-adapters"
+          $claudeDir4 = Join-Path $dir4 ".claude"
+          New-Item -ItemType Directory -Force -Path $claudeDir4 | Out-Null
+          $settingsDisabled = '{"singularityForge":{"hookAdapters":{"enabled":false,"active":["noop"]}}}'
+          Set-Content -Path (Join-Path $claudeDir4 "settings.json") -Value $settingsDisabled -Encoding utf8
+          Push-Location $dir4
+          & powershell.exe -ExecutionPolicy Bypass -File "$env:GITHUB_WORKSPACE\packages\hooks\adapters\run-adapters.ps1" "test-hook" "test-event"
+          if ($LASTEXITCODE -ne 0) { throw "run-adapters.ps1 (enabled=false) returned non-zero: $LASTEXITCODE" }
+          Pop-Location
+
+          # Case 5: enabled true + active noop - harus exit 0
+          $dir5 = Join-Path $TempRoot "enabled-noop"
+          $claudeDir5 = Join-Path $dir5 ".claude"
+          $hooksAdaptersDir5 = Join-Path $claudeDir5 "hooks\adapters"
+          New-Item -ItemType Directory -Force -Path $hooksAdaptersDir5 | Out-Null
+          Copy-Item "$env:GITHUB_WORKSPACE\packages\hooks\adapters\noop.ps1" (Join-Path $hooksAdaptersDir5 "noop.ps1")
+          $logDir5 = Join-Path $TempRoot "logs5"
+          $settingsEnabled = "{`"singularityForge`":{`"hookAdapters`":{`"enabled`":true,`"active`":[`"noop`"],`"logDir`":`"$($logDir5.Replace('\','\\'))`"}}}"
+          Set-Content -Path (Join-Path $claudeDir5 "settings.json") -Value $settingsEnabled -Encoding utf8
+          Push-Location $dir5
+          & powershell.exe -ExecutionPolicy Bypass -File "$env:GITHUB_WORKSPACE\packages\hooks\adapters\run-adapters.ps1" "test-hook" "test-event"
+          if ($LASTEXITCODE -ne 0) { throw "run-adapters.ps1 (enabled=true, active=noop) returned non-zero: $LASTEXITCODE" }
+          Pop-Location
+
+          # Case 6: hookAdapters.active kosong - harus exit 0
+          $dir6 = Join-Path $TempRoot "empty-active"
+          $claudeDir6 = Join-Path $dir6 ".claude"
+          New-Item -ItemType Directory -Force -Path $claudeDir6 | Out-Null
+          $settingsEmptyActive = '{"singularityForge":{"hookAdapters":{"enabled":true,"active":[]}}}'
+          Set-Content -Path (Join-Path $claudeDir6 "settings.json") -Value $settingsEmptyActive -Encoding utf8
+          Push-Location $dir6
+          & powershell.exe -ExecutionPolicy Bypass -File "$env:GITHUB_WORKSPACE\packages\hooks\adapters\run-adapters.ps1" "test-hook" "test-event"
+          if ($LASTEXITCODE -ne 0) { throw "run-adapters.ps1 (active=[]) returned non-zero: $LASTEXITCODE" }
+          Pop-Location
+
+          Write-Host "All run-adapters.ps1 edge-case tests passed."
+
+      - name: PowerShell logging and audit write-to-disk tests
+        shell: pwsh
+        run: |
+          $TempRoot = Join-Path $env:RUNNER_TEMP "sf-windows-log-test"
+          $LogDir   = Join-Path $TempRoot "logs"
+          New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+
+          $env:SF_HOOK_ADAPTERS_ENABLED  = "true"
+          $env:SF_HOOK_ADAPTERS_LOG_DIR  = $LogDir
+
+          # logging.ps1 harus menulis ke hooks.log
+          & powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/logging.ps1 "test-hook" "test_message_12345"
+          if ($LASTEXITCODE -ne 0) { throw "logging.ps1 returned non-zero: $LASTEXITCODE" }
+          $hooksLog = Join-Path $LogDir "hooks.log"
+          if (-not (Test-Path $hooksLog)) { throw "logging.ps1 did not create hooks.log" }
+          $logContent = Get-Content $hooksLog -Raw
+          if (-not $logContent.Contains("test-hook")) { throw "hooks.log missing expected content" }
+          Write-Host "logging.ps1 write-to-disk: PASS"
+
+          # audit.ps1 harus menulis ke audit.log
+          & powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/audit.ps1 "test-hook" "git push"
+          if ($LASTEXITCODE -ne 0) { throw "audit.ps1 returned non-zero: $LASTEXITCODE" }
+          $auditLog = Join-Path $LogDir "audit.log"
+          if (-not (Test-Path $auditLog)) { throw "audit.ps1 did not create audit.log" }
+          $auditContent = Get-Content $auditLog -Raw
+          if (-not $auditContent.Contains("AUDIT")) { throw "audit.log missing expected content" }
+          Write-Host "audit.ps1 write-to-disk: PASS"
+
+          # Reset env vars
+          Remove-Item Env:SF_HOOK_ADAPTERS_ENABLED -ErrorAction SilentlyContinue
+          Remove-Item Env:SF_HOOK_ADAPTERS_LOG_DIR -ErrorAction SilentlyContinue
+
+      - name: PowerShell installer dry-run test
+        shell: pwsh
+        run: |
+          $TempTarget = Join-Path $env:RUNNER_TEMP "sf-win-installer-dryrun"
+          New-Item -ItemType Directory -Force -Path $TempTarget | Out-Null
+          & powershell.exe -ExecutionPolicy Bypass -File installer/install-local.ps1 -TargetDir $TempTarget -DryRun
+          if ($LASTEXITCODE -ne 0) { throw "install-local.ps1 -DryRun returned non-zero: $LASTEXITCODE" }
+          # Verifikasi tidak ada file yang benar-benar disalin
+          $claudeDir = Join-Path $TempTarget ".claude"
+          if (Test-Path $claudeDir) {
+            throw "install-local.ps1 -DryRun must not create .claude directory!"
+          }
+          Write-Host "installer dry-run: PASS (no files written)"
