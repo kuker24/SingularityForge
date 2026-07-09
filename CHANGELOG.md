@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 - Minimal Profile Token Reduction
+
+### Fixed
+- Reduced word counts and trimmed redundancy in minimal profile files (`CLAUDE.md`, `token-discipline.md`, `SKILL.md`) to lower target to 359 estimated tokens.
+- All profiles verified as PASS under the budget limit targets on CachyOS/Linux.
+
 ## 0.4.0 - Profile-Aware Token Budgets & Safety Checks
 
 ### Added

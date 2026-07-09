@@ -1,28 +1,21 @@
 ---
 name: token-router
-description: Choose the smallest effective profile, context budget, tools, and skills before starting.
+description: Choose the smallest effective profile and skills before starting.
 ---
-
 # Token Router
-
-## Purpose
-Select the minimum context and tooling needed to solve the task.
+- Start minimal. Escalate only when blocked.
+- Search before reading. Read only files directly needed.
 
 ## Routing Table
 | Task | Profile | Skills |
 |---|---|---|
-| answer / info | minimal | token-router |
-| code change | coding | verify-before-done |
-| repo analysis | repo-review | repo-intake, architecture-review |
-| security review| security | security-review |
-| release engineering | release | release-check |
-
-## Context Budget
-- Start minimal. Escalate context/profile only when blocked.
-- Search before reading. Read only files directly needed.
+| answer | minimal | token-router |
+| code | coding | verify-before-done |
+| review | repo-review/security | repo-intake/security-review |
+| release | release | release-check |
 
 ## Output
-Before starting large work, state:
+Before starting:
 ```txt
 Profile: [minimal/coding/security/...]
 Plan: [brief search/read/verify plan]
