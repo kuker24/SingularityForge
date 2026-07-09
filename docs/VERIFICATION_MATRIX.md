@@ -31,9 +31,9 @@ Status vocabulary:
 | Unit tests | Verified | `npm run test:unit` | `reports/tool-evidence/local-verification.md` |
 | Coverage | Verified | `npm run test:coverage` | `reports/tool-evidence/local-verification.md` |
 | pre-commit | Supported | `pre-commit run --all-files` | config scaffold |
-| Semgrep CE | Supported | `semgrep scan --config p/default --metrics=off` | workflow scaffold, `reports/security/security-tooling-status.md` |
+| Semgrep CE | Verified (CI) | `semgrep scan --config p/default --metrics=off` | GitHub Actions run, `reports/security/security-tooling-status.md` |
 | OSV-Scanner | Supported | `osv-scanner scan source -r .` | network-dependent, not hard-blocking |
-| Gitleaks | Supported | `gitleaks git --redact .` | workflow scaffold |
+| Gitleaks | Verified (CI) | `gitleaks git --redact .` | GitHub Actions run, `reports/security/security-tooling-status.md` |
 | Knip | Supported | `npx knip` | config scaffold |
 | Playwright | Supported | `npx playwright test --project=chromium` | optional, placeholder |
 | Repomix | Supported | `repomix --compress` | opt-in only |

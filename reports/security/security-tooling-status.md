@@ -1,7 +1,7 @@
 # Security Tooling Status
 
-Timestamp: 2026-07-09T21:26:00Z
-Status: Supported
+Timestamp: 2026-07-09T21:40:00Z
+Status: Verified
 
 This report summarizes the status of security tools configured for SingularityForge.
 
@@ -9,8 +9,8 @@ This report summarizes the status of security tools configured for SingularityFo
 
 | Tool | Status | Run Command | Findings / Notes |
 |---|---|---|---|
-| Gitleaks | Supported | `gitleaks git --redact .` | Run in GitHub Action workflow to scan history for credentials and tokens. |
-| Semgrep CE | Supported | `semgrep scan --config p/default` | Run in GitHub Action workflow to check code quality/security bugs. Bypass token dependency. |
+| Gitleaks | Verified (CI) | `gitleaks git --redact .` | Run and verified green in GitHub Action workflow (Run #29025336637). |
+| Semgrep CE | Verified (CI) | `semgrep scan --config p/default` | Run and verified green in GitHub Action workflow (Run #29025336637) with config bypass on missing optional app token. |
 | OSV-Scanner | Supported | `osv-scanner scan source -r .` | Network-dependent dependency vulnerability check. |
 | Pre-dangerous-command Hook | Verified | `packages/hooks/pre-dangerous-command.sh` | Verified local execution blocks dangerous patterns like `rm -rf /` and `cat ~/.ssh/id_rsa`. |
 | PowerShell Hook | Supported | `packages/hooks/pre-dangerous-command.ps1` | PowerShell port added for Windows runtime environment. |
