@@ -57,4 +57,4 @@ Berikut adalah contoh log yang dihasilkan oleh logging adapter di `~/.claude/log
 ```
 
 ## Batasan (Known Limitations)
-Pada rilis `v0.5.0`, Hook Adapter Framework hanya diuji dan diverifikasi secara resmi untuk platform **Linux CachyOS** menggunakan Bash runtime. Dukungan untuk PowerShell di Windows direncanakan untuk iterasi selanjutnya.
+Pada rilis `v0.5.0` dan `v0.5.1`, Hook Adapter Framework hanya diuji dan diverifikasi secara resmi untuk platform **Linux CachyOS** menggunakan Bash runtime. Dukungan untuk PowerShell di Windows saat ini berstatus **Experimental** (lihat [docs/WINDOWS_HOOK_ADAPTERS.md](WINDOWS_HOOK_ADAPTERS.md)).

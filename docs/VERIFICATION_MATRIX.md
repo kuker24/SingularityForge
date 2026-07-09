@@ -30,6 +30,7 @@ Status vocabulary:
 | Obsidian vault template | Supported | `ls packages/obsidian` | scaffold provided |
 | Hooks scaffold | Verified | `find packages/hooks -type f` | repo files |
 | Hook Adapter Framework | Verified | `npm run test:unit` | `reports/hooks/hook-adapter-verification.md` |
+| Windows Hook Adapters | Supported | `pwsh -File installer/install-local.ps1 -DryRun` | `reports/hooks/windows-hook-adapter-verification.md` |
 | PowerShell Hook Support | Supported | `find packages/hooks -name "*.ps1"` | PowerShell hook files, not locally verified on Windows |
 | TypeScript typecheck | Verified | `npm run typecheck` | `reports/tool-evidence/local-verification.md` |
 | Unit tests | Verified | `npm run test:unit` | `reports/tool-evidence/local-verification.md` |

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1 - Windows PowerShell Hook Adapter Parity (Experimental)
+
+### Added
+- Experimental Windows PowerShell hook adapter equivalents (`noop.ps1`, `logging.ps1`, `audit.ps1`, `external-placeholder.ps1`, `run-adapters.ps1`).
+- Ported fail-safe adapter runner for Windows environments.
+- Updated Windows installers (`install.ps1` and `install-local.ps1`) to support non-destructive adapter directory copy.
+- Detailed developer documentation in `docs/WINDOWS_HOOK_ADAPTERS.md`.
+
 ## 0.5.0 - Hook Adapter Framework
 
 ### Added

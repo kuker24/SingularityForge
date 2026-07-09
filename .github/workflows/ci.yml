@@ -31,3 +31,24 @@ jobs:
 
       - name: Token report
         run: npm run token:report
+
+  windows-verify:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Unit smoke tests
+        run: npm run test:unit
+
+      - name: Run PowerShell Adapter Tests
+        shell: pwsh
+        run: |
+          powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/noop.ps1
+          powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/external-placeholder.ps1
+          powershell.exe -ExecutionPolicy Bypass -File packages/hooks/adapters/run-adapters.ps1

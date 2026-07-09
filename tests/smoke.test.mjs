@@ -116,7 +116,10 @@ if (invalidResult.status !== 1 || !invalidResult.stderr.includes('Invalid profil
 }
 
 // 5. Hook adapters test validation
-const adapterFiles = ['noop.sh', 'logging.sh', 'audit.sh', 'external-placeholder.sh', 'run-adapters.sh'];
+const adapterFiles = [
+  'noop.sh', 'logging.sh', 'audit.sh', 'external-placeholder.sh', 'run-adapters.sh',
+  'noop.ps1', 'logging.ps1', 'audit.ps1', 'external-placeholder.ps1', 'run-adapters.ps1'
+];
 const adaptersPath = path.join(root, 'packages/hooks/adapters');
 
 for (const file of adapterFiles) {
@@ -127,7 +130,7 @@ for (const file of adapterFiles) {
   }
   
   // Executable check (skipped on Windows, but run on Linux)
-  if (process.platform !== 'win32') {
+  if (process.platform !== 'win32' && file.endsWith('.sh')) {
     const permResult = spawnSync('test', ['-x', fullPath]);
     if (permResult.status !== 0) {
       console.error(`Adapter file not executable: ${file}`);

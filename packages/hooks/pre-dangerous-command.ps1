@@ -62,4 +62,11 @@ foreach ($Pattern in $ApprovalPatterns) {
   }
 }
 
+# Run Hook Adapter Framework
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$AdapterRunner = Join-Path $ScriptDir "adapters\run-adapters.ps1"
+if (Test-Path $AdapterRunner) {
+    powershell.exe -ExecutionPolicy Bypass -File $AdapterRunner "pre-dangerous-command" $Command 2>$null
+}
+
 exit 0
