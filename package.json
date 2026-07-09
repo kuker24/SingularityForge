@@ -1,6 +1,6 @@
 {
   "name": "singularityforge",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Global Claude Code runtime distribution with skills, rules, hooks, installers, and evidence discipline.",

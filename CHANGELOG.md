@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 - Stable Linux Runtime
+
+### Stable
+- Freezes Linux/CachyOS as the production baseline for SingularityForge.
+- Finalizes production readiness, security posture, known limitations, and release checklist documentation.
+- Confirms Windows remains Experimental and external integrations remain default OFF.
+- Adds v1.0.0 stable readiness report.
+
 ## 0.7.0 - Linux Installer & Environment Hardening
 
 ### Added
