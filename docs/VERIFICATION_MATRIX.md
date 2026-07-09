@@ -31,6 +31,7 @@ Status vocabulary:
 | Hooks scaffold | Verified | `find packages/hooks -type f` | repo files |
 | Hook Adapter Framework | Verified | `npm run test:unit` | `reports/hooks/hook-adapter-verification.md` |
 | Windows Hook Adapters | Experimental | `pwsh -File installer/install-local.ps1 -DryRun` | `reports/hooks/windows-hook-adapter-verification.md` |
+| Windows Native Hardening | Experimental | CI `windows-latest` edge-case + write-to-disk tests | `reports/hooks/windows-native-hardening-verification.md` |
 | PowerShell Hook Support | Experimental | `find packages/hooks -name "*.ps1"` | PowerShell hook files, not locally verified on Windows |
 | TypeScript typecheck | Verified | `npm run typecheck` | `reports/tool-evidence/local-verification.md` |
 | Unit tests | Verified | `npm run test:unit` | `reports/tool-evidence/local-verification.md` |
