@@ -79,9 +79,9 @@ run "chmod +x \"$CLAUDE_DIR\"/hooks/*.sh 2>/dev/null || true"
 
 # Compile and optimize token cache
 if [ "$DRY_RUN" = false ]; then
-  node "$REPO_ROOT/scripts/optimize-token-cache.mjs"
+  node "$REPO_ROOT/scripts/optimize-token-cache.mjs" "$CLAUDE_DIR"
 else
-  echo "[dry-run] node \"$REPO_ROOT/scripts/optimize-token-cache.mjs\""
+  echo "[dry-run] node \"$REPO_ROOT/scripts/optimize-token-cache.mjs\" \"$CLAUDE_DIR\""
 fi
 
 say "Install complete."

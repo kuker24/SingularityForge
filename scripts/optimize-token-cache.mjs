@@ -49,30 +49,38 @@ const PROFILE_MAP = {
 };
 
 // Determine target configuration directory
-let targetDir = path.join(os.homedir(), '.claude');
+let targetDir = process.argv[2];
 let isLocal = false;
 
-// If local project .claude/settings.json exists, optimize local directory instead
-if (existsSync(path.join(root, '.claude/settings.json'))) {
-  targetDir = path.join(root, '.claude');
-  isLocal = true;
+if (targetDir) {
+  targetDir = path.resolve(targetDir);
+  const globalClaudePath = path.resolve(path.join(os.homedir(), '.claude'));
+  if (targetDir !== globalClaudePath) {
+    isLocal = true;
+  }
+} else {
+  if (existsSync(path.join(root, '.claude/settings.json'))) {
+    targetDir = path.join(root, '.claude');
+    isLocal = true;
+  } else {
+    targetDir = path.join(os.homedir(), '.claude');
+  }
 }
 
 const settingsPath = path.join(targetDir, 'settings.json');
-if (!existsSync(settingsPath)) {
-  console.error(`Error: settings.json not found at ${settingsPath}`);
-  process.exit(1);
-}
-
-// Read profile setting
 let profile = 'minimal';
-try {
-  const settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
-  if (settings.singularityForge && settings.singularityForge.profile) {
-    profile = settings.singularityForge.profile;
+
+if (existsSync(settingsPath)) {
+  try {
+    const settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
+    if (settings.singularityForge && settings.singularityForge.profile) {
+      profile = settings.singularityForge.profile;
+    }
+  } catch (e) {
+    console.warn(`Warning: Failed to parse settings.json. Defaulting to 'minimal' profile.`);
   }
-} catch (e) {
-  console.warn(`Warning: Failed to parse settings.json. Defaulting to 'minimal' profile.`);
+} else {
+  console.warn(`Warning: settings.json not found at ${settingsPath}. Defaulting to 'minimal' profile.`);
 }
 
 console.log(`Optimizing Token Cache for directory: ${targetDir}`);
