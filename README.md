@@ -1,91 +1,110 @@
 # SingularityForge
 
-**SingularityForge** adalah distribusi runtime global untuk Claude Code dan AI coding agent. Repo ini menyimpan PRD, arsitektur, global memory, rules, skills, hooks, installer lintas OS, Obsidian second brain template, QA gate, security gate, dan evidence model.
+**SingularityForge** adalah distribusi runtime global yang aman, modular, dan terstandardisasi untuk Claude Code dan AI coding agent. Repo ini menyediakan global memory, rules, skills, hooks (Bash & PowerShell), installer idempotent lintas OS, Obsidian second brain template, QA gate, security gate, release automation, dan evidence discipline.
 
 Filosofi utama:
+- **Teacher, not workhorse**: Mengajarkan agent berpikir, bukan hanya menulis baris kode.
+- **Rules over vibes**: Mengandalkan aturan tertulis daripada asumsi model.
+- **Evidence before reasoning**: Mencari fakta di file/logs sebelum mengambil kesimpulan.
+- **Verify before done**: Menjalankan command verifikasi secara lokal sebelum selesai.
+- **Skill over giant prompt**: Menjaga konteks tetap kecil dengan skill terisolasi.
+- **Token discipline by default**: Meminimalkan konsumsi input token.
+
+---
+
+## Fitur Utama & Wiring Status
+
+1. **Global Settings & Hook Wiring**:
+   - `PreToolUse`: Melindungi environment dengan menghalangi command berbahaya (seperti `rm -rf /`) dan meminta konfirmasi tindakan destruktif.
+   - `PostToolUse`: Menjalankan verifikasi skill secara otomatis ketika file skill berubah.
+   - `Stop`: Mengingatkan agent untuk menyusun evidence report sebelum selesai.
+2. **PowerShell Windows Support**: PowerShell hooks (`.ps1`) disediakan sejajar dengan Unix hooks untuk mendukung sistem Windows.
+3. **Idempotent Lints & Installers**: Installer mendeteksi status Claude Code, membuat backup di `~/.claude.singularityforge.backup.<timestamp>`, memvalidasi source file sebelum menyalin, dan mengonfigurasi permissions secara otomatis.
+4. **AstralForge Import Pipeline**: Scripts import modular `import-astralforge-skills.mjs` untuk mengunduh, mengaudit dari malware/destructive command, dan meletakkan skill baru ke staged review.
+5. **Obsidian Integration**: Template Markdown siap pakai untuk Session Logs, Debug Notes, dan Architecture Decision Records (ADR).
+
+---
+
+## Quick Install & Usage
+
+### Linux & macOS
+
+1. **Dry Run** (Simulasikan tanpa memodifikasi data):
+   ```bash
+   bash installer/install.sh --dry-run
+   ```
+2. **Install**:
+   ```bash
+   bash installer/install.sh
+   ```
+3. **Verify**:
+   ```bash
+   bash installer/verify.sh
+   ```
+4. **Uninstall**:
+   ```bash
+   bash installer/uninstall.sh
+   ```
+
+### Windows (PowerShell)
+
+1. **Dry Run**:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun
+   ```
+2. **Install**:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File installer/install.ps1
+   ```
+3. **Verify**:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File installer/verify.ps1
+   ```
+4. **Uninstall**:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File installer/uninstall.ps1
+   ```
+
+---
+
+## Profil Konteks (Profile Context Budget)
+
+SingularityForge membatasi context window Claude Code berdasarkan profile aktif:
+- `minimal` (default): Hanya memuat global memory dasar.
+- `coding`: Menambahkan debug, unit tests, dan check.
+- `repo-review`: Menambahkan repo intake dan visualisasi arsitektur.
+- `security`: Menambahkan security audits.
+- `release`: Menyiapkan log release dan checklist.
+
+---
+
+## Struktur Repositori
 
 ```txt
-Teacher, not workhorse.
-Rules over vibes.
-Evidence before reasoning.
-Verify before done.
-Skill over giant prompt.
-Token discipline by default.
-```
-
-## Tujuan
-
-SingularityForge dibuat untuk memasang satu sistem global yang bisa dipakai di semua project:
-
-- Global Claude memory untuk semua repo
-- Skill system modular berbasis `SKILL.md`
-- Skill router agar hemat token
-- Hooks guardrail untuk verifikasi otomatis
-- Obsidian second brain untuk memori lintas sesi
-- Installer Linux, macOS, Windows PowerShell, dan Windows CMD
-- QA/security gate dengan evidence report
-- Profile mode: `minimal`, `coding`, `repo-review`, `security`, `release`, `max`
-
-## Sumber dan referensi
-
-### Official
-
-- Claude Code docs: https://code.claude.com/docs/en/overview
-- Claude Code memory: https://code.claude.com/docs/en/memory
-- Claude Code hooks: https://code.claude.com/docs/en/hooks
-- Claude Code skills: https://code.claude.com/docs/en/skills
-- Anthropic Skills: https://github.com/anthropics/skills
-
-### Trusted implementation reference
-
-- AstralForge Senior Engineer Skills: https://github.com/kuker24/AstralForge-Senior-Engineer-Skills
-- Obsidian Skills by Kepano: https://github.com/kepano/obsidian-skills
-
-### Inspiration only
-
-- CL4R1T4S Fable prompt artifact: https://github.com/elder-plinius/CL4R1T4S
-- Nate Herk video: https://www.youtube.com/watch?v=XTBWVVcF3Pk
-- Kun Chen dotfiles: https://github.com/kunchenguid/dotfiles
-- Matt Pocock writing great skills: https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-great-skills/SKILL.md
-
-## Quick install
-
-> Installer masih tahap scaffold awal. Jalankan setelah review isi file.
-
-Linux atau macOS:
-
-```bash
-bash installer/install.sh
-bash installer/verify.sh
-```
-
-Windows PowerShell:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File installer/install.ps1
-powershell -ExecutionPolicy Bypass -File installer/verify.ps1
-```
-
-## Struktur repo
-
-```txt
-SingularityForge
-├── docs/
+SingularityForge/
+├── docs/                     # Dokumentasi arsitektur, PRD, security, hooks, release
+├── installer/                # Installer (.sh, .ps1, .cmd)
 ├── packages/
-│   ├── global-memory/
-│   ├── rules/
-│   ├── skills/
-│   ├── hooks/
-│   ├── profiles/
-│   ├── obsidian/
-│   └── templates/
-├── installer/
-├── scripts/
-├── tests/
-├── reports/
-└── .github/workflows/
+│   ├── global-memory/        # CLAUDE.md global
+│   ├── rules/                # Aturan domain (security, engineering, dll.)
+│   ├── skills/               # Task-specific SKILL.md
+│   ├── hooks/                # Bash & PowerShell hooks
+│   ├── settings/             # Konfigurasi global settings.json
+│   ├── obsidian/             # Vault template untuk Second Brain
+│   └── templates/            # Template scaffold project
+├── scripts/                  # CI, skill checkers, AstralForge pipeline
+├── reports/                  # Evidence report lokal dan security scan
+└── tests/                    # Smoke dan unit tests
 ```
 
-## Status awal
+---
 
-Repo ini dimulai sebagai fondasi untuk membangun sistem penuh. Semua klaim `Verified`, `Supported`, `Manual only`, dan `Unverified` harus ditulis di `docs/VERIFICATION_MATRIX.md` dan didukung evidence di `reports/`.
+## Status Verifikasi (Verification Matrix)
+
+Lihat status terkini di [docs/VERIFICATION_MATRIX.md](docs/VERIFICATION_MATRIX.md). 
+Laporan pengujian lokal yang sesungguhnya disimpan di folder [reports/](reports/).
+
+## Safety Warning
+
+- SingularityForge melarang penulisan credential, API key, atau token ke dalam repositori.
+- Pastikan Anda memeriksa parameter hooks di `packages/settings/settings.json` sebelum melakukan modifikasi.

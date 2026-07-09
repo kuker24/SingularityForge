@@ -13,7 +13,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/pre-dangerous-command.sh"
+            "command": "~/.claude/hooks/pre-dangerous-command.sh"
           }
         ]
       }
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/post-edit-skill-verify.sh"
+            "command": "~/.claude/hooks/post-edit-skill-verify.sh"
           }
         ]
       }
@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/stop-verify-before-done.sh"
+            "command": "~/.claude/hooks/stop-verify-before-done.sh"
           }
         ]
       }

@@ -11,6 +11,7 @@ Sumber resmi yang boleh dijadikan dasar implementasi.
 | Claude Code overview | https://code.claude.com/docs/en/overview | Install, CLI, platform support |
 | Claude Code memory | https://code.claude.com/docs/en/memory | `CLAUDE.md`, memory scope, import, organization |
 | Claude Code hooks | https://code.claude.com/docs/en/hooks | Hook lifecycle, PreToolUse, PostToolUse, Stop |
+| Claude Code hooks guide | https://code.claude.com/docs/en/hooks-guide | Configuration formats, settings.json example, exit codes |
 | Claude Code skills | https://code.claude.com/docs/en/skills | Skill folder, `SKILL.md`, supporting files |
 | Anthropic Skills repo | https://github.com/anthropics/skills | Official examples, template, spec, plugin model |
 

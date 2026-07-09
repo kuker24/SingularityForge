@@ -19,17 +19,19 @@ Status vocabulary:
 | Global memory scaffold | Verified | `test -f packages/global-memory/CLAUDE.md` | repo file |
 | Rules scaffold | Verified | `find packages/rules -type f` | repo files |
 | Core skills scaffold | Verified | `npm run verify:skills` | local after clone |
-| Skill substantive audit | Supported | `npm run audit:skills` | scaffold provided |
-| Linux installer | Supported | `bash installer/install.sh --dry-run` | scaffold provided |
-| macOS installer | Supported | `bash installer/install-macos.sh --dry-run` | scaffold provided |
-| Windows installer | Supported | `powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun` | scaffold provided |
+| Skill substantive audit | Verified | `npm run audit:skills` | `reports/skill-audit-summary.md` |
+| settings.json configuration | Verified | `test -f packages/settings/settings.json` | repo file & `docs/HOOKS.md` |
+| Linux installer | Verified | `bash installer/install.sh --dry-run` | `reports/install-verification/dry-run.md` |
+| macOS installer | Supported | `bash installer/install-macos.sh --dry-run` | Script ready, not locally verified on macOS |
+| Windows installer | Supported | `powershell -ExecutionPolicy Bypass -File installer/install.ps1 -DryRun` | Script ready, not locally verified on Windows |
 | Obsidian vault template | Supported | `ls packages/obsidian` | scaffold provided |
-| Hooks scaffold | Supported | `find packages/hooks -type f` | repo files |
-| TypeScript typecheck | Supported | `npm run typecheck` | package script |
-| Unit tests | Supported | `npm run test:unit` | placeholder test |
-| Coverage | Supported | `npm run test:coverage` | placeholder test |
+| Hooks scaffold | Verified | `find packages/hooks -type f` | repo files |
+| PowerShell Hook Support | Supported | `find packages/hooks -name "*.ps1"` | PowerShell hook files, not locally verified on Windows |
+| TypeScript typecheck | Verified | `npm run typecheck` | `reports/tool-evidence/local-verification.md` |
+| Unit tests | Verified | `npm run test:unit` | `reports/tool-evidence/local-verification.md` |
+| Coverage | Verified | `npm run test:coverage` | `reports/tool-evidence/local-verification.md` |
 | pre-commit | Supported | `pre-commit run --all-files` | config scaffold |
-| Semgrep CE | Supported | `semgrep scan --config p/default --metrics=off` | workflow scaffold |
+| Semgrep CE | Supported | `semgrep scan --config p/default --metrics=off` | workflow scaffold, `reports/security/security-tooling-status.md` |
 | OSV-Scanner | Supported | `osv-scanner scan source -r .` | network-dependent, not hard-blocking |
 | Gitleaks | Supported | `gitleaks git --redact .` | workflow scaffold |
 | Knip | Supported | `npx knip` | config scaffold |
@@ -39,6 +41,7 @@ Status vocabulary:
 | Context7 Pi | Supported | profile-based | opt-in integration note |
 | Serena MCP | Supported | profile-based | opt-in integration note |
 | StrykerJS mutation | Manual only | `npm run mutation` | never auto-run |
+| AstralForge import pipeline | Verified | `node scripts/import-astralforge-skills.mjs` | `docs/ASTRALFORGE_IMPORT_REPORT.md` |
 
 ## Verification Policy
 

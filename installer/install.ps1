@@ -31,7 +31,40 @@ if ($ClaudeCommand) {
 }
 
 if (Test-Path $ClaudeDir) {
-  Invoke-Step "Backup $ClaudeDir to $BackupDir" { Copy-Item -Recurse -Force $ClaudeDir $BackupDir }
+  $Items = Get-ChildItem $ClaudeDir -ErrorAction SilentlyContinue
+  if ($Items) {
+    Invoke-Step "Backup $ClaudeDir to $BackupDir" { Copy-Item -Recurse -Force $ClaudeDir $BackupDir }
+  } else {
+    Write-Host "Target folder exists but is empty, skipping backup."
+  }
+}
+
+# Validation of source files
+$SourceFiles = @(
+  "packages/global-memory/CLAUDE.md",
+  "packages/settings/settings.json",
+  "packages/templates/SingularityForge.md"
+)
+foreach ($File in $SourceFiles) {
+  $FullPath = Join-Path $RepoRoot $File
+  if (-not (Test-Path $FullPath)) {
+    Write-Error "Error: Source file $FullPath not found."
+    exit 1
+  }
+}
+
+$SourceDirs = @(
+  "packages/rules",
+  "packages/skills",
+  "packages/hooks",
+  "packages/profiles"
+)
+foreach ($Dir in $SourceDirs) {
+  $FullPath = Join-Path $RepoRoot $Dir
+  if (-not (Test-Path $FullPath)) {
+    Write-Error "Error: Source directory $FullPath not found."
+    exit 1
+  }
 }
 
 Invoke-Step "Create Claude directories" {
@@ -44,6 +77,7 @@ Invoke-Step "Create Claude directories" {
 
 Invoke-Step "Install files" {
   Copy-Item -Force (Join-Path $RepoRoot "packages/global-memory/CLAUDE.md") (Join-Path $ClaudeDir "CLAUDE.md")
+  Copy-Item -Force (Join-Path $RepoRoot "packages/settings/settings.json") (Join-Path $ClaudeDir "settings.json")
   Copy-Item -Recurse -Force (Join-Path $RepoRoot "packages/rules/*") (Join-Path $ClaudeDir "rules")
   Copy-Item -Recurse -Force (Join-Path $RepoRoot "packages/skills/*") (Join-Path $ClaudeDir "skills")
   Copy-Item -Recurse -Force (Join-Path $RepoRoot "packages/hooks/*") (Join-Path $ClaudeDir "hooks")
@@ -51,4 +85,9 @@ Invoke-Step "Install files" {
   Copy-Item -Force (Join-Path $RepoRoot "packages/templates/SingularityForge.md") (Join-Path $ClaudeDir "SingularityForge.md")
 }
 
-Write-Host "Install complete. Run: powershell -ExecutionPolicy Bypass -File installer/verify.ps1"
+Write-Host "Install complete."
+Write-Host "Next steps:"
+Write-Host "1. Verify the installation by running: powershell -ExecutionPolicy Bypass -File installer/verify.ps1"
+Write-Host "2. Note that hooks are configured globally in ~/.claude/settings.json."
+Write-Host "3. You can override settings locally in your project folder under .claude/settings.json."
+Write-Host "4. Keep token usage in mind; default profile is 'minimal'."
